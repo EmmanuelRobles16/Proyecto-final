@@ -18,6 +18,12 @@ void MainWindow::iniciarNivel(int numero) {
     escena = new QGraphicsScene(0, 0, 800, 600, this);
     ui->graphicsView->setScene(escena);
 
+    if (numero == 1) {
+        QPixmap fondo(":/sprites/fondo_nivel_1.png");
+        fondo = fondo.scaled(800, 600, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        escena->setBackgroundBrush(QBrush(fondo));
+    }
+
     goku = new Goku();
     goku->setPos(100, 500);
     escena->addItem(goku);
