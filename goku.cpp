@@ -1,7 +1,7 @@
 #include "goku.h"
+#include "plataforma.h"
 #include <QPixmap>
 #include <QGraphicsScene>
-
 Goku::Goku(QObject *parent)
     : QObject(parent)
 {
@@ -90,6 +90,9 @@ void Goku::actualizarHUD()
 }
 void Goku::actualizarFisica()
 {
+    // Posicion anterior para detectar aterrizajes
+    qreal yAnterior = y();
+
     // Aplicar gravedad
     velocidadY += gravedad;
     if (estaPlaneando) {
@@ -110,12 +113,34 @@ void Goku::actualizarFisica()
         else if (x() > maxX)
             setX(maxX);
     }
-    // Verificar colision con el suelo
-    if (y() >= 500) {
+
+    bool aterrizo = false;
+    QList<QGraphicsItem*> items = collidingItems();
+    for (QGraphicsItem* it : items) {
+        Plataforma* plat = dynamic_cast<Plataforma*>(it);
+        if (plat && velocidadY >= 0) {
+            qreal top = plat->y();
+            qreal gokuBottomPrev = yAnterior + boundingRect().height();
+            if (gokuBottomPrev <= top + 1) {
+                setPos(x(), top - boundingRect().height());
+                velocidadY = 0.0f;
+                velocidadX = 0.0f;
+                enElAire = false;
+                desactivarPlaneo();
+                aterrizo = true;
+                break;
+            }
+        }
+    }
+
+    // Verificar colision con el suelo si no aterrizo en plataforma
+    if (!aterrizo && y() >= 500) {
         setPos(x(), 500);
         velocidadY = 0.0f;
         velocidadX = 0.0f;
         enElAire = false;
         desactivarPlaneo();
+    } else if (!aterrizo) {
+        enElAire = true;
     }
 }

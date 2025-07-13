@@ -9,6 +9,8 @@
 #include "goku.h"
 #include "enemigovolador.h"
 #include "hud.h"
+#include "plataforma.h"
+#include "metafinal.h"
 #include <QVector>
 
 namespace Ui {
@@ -42,6 +44,8 @@ private:
     Goku *goku = nullptr;
     QTimer *timer = nullptr;
     QVector<EnemigoVolador*> enemigos;
+    QVector<Plataforma*> Plataformas;
+    MetaFinal *MetaFinal = nullptr;
     QTimer *timerEnemigos = nullptr;
     QTimer *timerGeneradorEnemigos = nullptr;
     QTimer *timerColisiones = nullptr;

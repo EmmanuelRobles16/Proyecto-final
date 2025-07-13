@@ -3,6 +3,8 @@
 #include "goku.h"
 #include "enemigovolador.h"
 #include "hud.h"
+#include "plataforma.h"
+#include "metafinal.h"
 #include <QRandomGenerator>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -39,6 +41,16 @@ MainWindow::~MainWindow() {
         delete e;
     }
     enemigos.clear();
+    for (Plataforma* p : Plataformas) {
+        escena->removeItem(p);
+        delete p;
+    }
+    Plataformas.clear();
+    if (MetaFinal) {
+        escena->removeItem(MetaFinal);
+        delete MetaFinal;
+        MetaFinal = nullptr;
+    }
     delete hud;
     delete ui;
 }
@@ -66,6 +78,20 @@ void MainWindow::iniciarNivel(int numero) {
     goku->setPos(100, 500);
     escena->addItem(goku);
     actualizarCamara();
+
+    // Crear plataformas
+    Plataforma *p1 = new Plataforma(400, 400, 100, 20);
+    escena->addItem(p1);
+    Plataformas.append(p1);
+
+    Plataforma *p2 = new Plataforma(700, 300, 120, 20);
+    escena->addItem(p2);
+    Plataformas.append(p2);
+
+    // Meta del nivel
+    MetaFinal = new class MetaFinal();
+    MetaFinal->setPos(1500, 400);
+    escena->addItem(MetaFinal);
 
     // Crear HUD de vida
     hud = new HUD();
@@ -189,6 +215,12 @@ void MainWindow::verificarColisiones()
                 close();
                 return;
             }
+        }
+        if ((MetaFinal* Meta = dynamic_cast<class MetaFinal*>(item))) {
+            Q_UNUSED(Meta);
+            QMessageBox::information(this, "Nivel completado", "\xC2\xA1Nivel completado!");
+            close();
+            return;
         }
     }
 }

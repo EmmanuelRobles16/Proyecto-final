@@ -20,8 +20,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     menu.cpp \
+    metafinal.cpp \
     nivel.cpp \
     personaje.cpp \
+    plataforma.cpp \
     proyectil.cpp \
     tenshinhan.cpp
 
@@ -36,8 +38,10 @@ HEADERS += \
     juego.h \
     mainwindow.h \
     menu.h \
+    metafinal.h \
     nivel.h \
     personaje.h \
+    plataforma.h \
     proyectil.h \
     tenshinhan.h
 
