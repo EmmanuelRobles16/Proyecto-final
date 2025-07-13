@@ -13,6 +13,8 @@
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
+#include <QtMultimedia/QMediaPlayer>
+#include <QtMultimedia/QAudioOutput>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -57,6 +59,13 @@ MainWindow::~MainWindow() {
         delete metaFinal;
         metaFinal = nullptr;
     }
+    if (musicaFondo) {
+        musicaFondo->stop();
+        delete musicaFondo;
+        musicaFondo = nullptr;
+        delete audioOutput;
+        audioOutput = nullptr;
+    }
     delete hud;
     delete ui;
 }
@@ -65,6 +74,14 @@ void MainWindow::iniciarNivel(int numero) {
     escena = new QGraphicsScene(0, 0, 2400, 600, this);
     ui->graphicsView->setScene(escena);
 
+    if (!musicaFondo) {
+        musicaFondo = new QMediaPlayer(this);
+        audioOutput = new QAudioOutput(this);
+        musicaFondo->setAudioOutput(audioOutput);
+        musicaFondo->setSource(QUrl("qrc:/audio/musica_nivel1.wav"));
+        musicaFondo->setLoops(QMediaPlayer::Infinite);
+        musicaFondo->play();
+    }
     escena->setBackgroundBrush(Qt::black); // color de respaldo
 
     // Fondo que se repite horizontalmente a lo largo de la escena
@@ -181,16 +198,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 
     switch (event->key()) {
-    case Qt::Key_Left:
-        goku->moverIzquierda();
-        break;
-    case Qt::Key_Right:
-        goku->moverDerecha();
-        break;
-    case Qt::Key_Space:
-        goku->saltar();
-        goku->activarPlaneo();
-        break;
+        case Qt::Key_Left:
+            goku->moverIzquierda();
+            break;
+        case Qt::Key_Right:
+            goku->moverDerecha();
+            break;
+        case Qt::Key_Space:
+            goku->saltar();
+            goku->activarPlaneo();
+            break;
     default:
         QMainWindow::keyPressEvent(event);
         break;
@@ -204,10 +221,17 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
 
-    if (event->key() == Qt::Key_Space) {
+    switch (event->key()) {
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+        goku->detenerAnimacionCaminar();
+        break;
+    case Qt::Key_Space:
         goku->desactivarPlaneo();
-    } else {
+        break;
+    default:
         QMainWindow::keyReleaseEvent(event);
+        break;
     }
 }
 void MainWindow::actualizarEnemigos()

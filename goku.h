@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
+#include <QPixmap>
+#include <QVector>
+#include <QTimer>
+#include <QtMultimedia/QSoundEffect>
 
 class Goku : public QObject, public QGraphicsPixmapItem
 {
@@ -25,10 +29,14 @@ public slots:
     void actualizarFisica();
     void activarPlaneo();
     void desactivarPlaneo();
+    void detenerAnimacionCaminar();
     bool estaEnElAire() const { return enElAire; }
 
 private:
     void actualizarHUD();
+
+    void iniciarAnimacionCaminar();
+    void actualizarFrameCaminar();
 
     float velocidadX;
     float velocidadY;
@@ -40,6 +48,16 @@ private:
     int framesPlaneo;
     int maxFramesPlaneo;
     int vida;
+
+    QVector<QPixmap> spritesCaminar;
+    QPixmap spriteIdle;
+    QPixmap spritePlaneo;
+
+    QTimer animacionTimer;
+    int frameActual;
+    bool caminando;
+
+    QSoundEffect sonidoGolpe;
 };
 
 

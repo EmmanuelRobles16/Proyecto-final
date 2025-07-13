@@ -13,6 +13,8 @@
 #include "metafinal.h"
 #include "esferadragon.h"
 #include <QVector>
+#include <QtMultimedia/QMediaPlayer>
+#include <QtMultimedia/QAudioOutput>
 
 namespace Ui {
 class MainWindow;
@@ -52,6 +54,8 @@ private:
     QTimer *timerGeneradorEnemigos = nullptr;
     QTimer *timerColisiones = nullptr;
     HUD *hud = nullptr;
+    QMediaPlayer *musicaFondo = nullptr;
+    QAudioOutput *audioOutput = nullptr;
 };
 
 #endif // MAINWINDOW_H

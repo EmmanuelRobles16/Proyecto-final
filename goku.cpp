@@ -2,12 +2,27 @@
 #include "plataforma.h"
 #include <QPixmap>
 #include <QGraphicsScene>
+#include <QTimer>
+#include <QtMultimedia/QSoundEffect>
 Goku::Goku(QObject *parent)
     : QObject(parent)
 {
-    QPixmap sprite(":/sprites/goku.png");
-    setPixmap(sprite.scaled(60, 60));
+    spriteIdle = QPixmap(":/sprites/goku_idle.png");
+    spritePlaneo = QPixmap(":/sprites/goku_planeando.png");
+    spritesCaminar.append(QPixmap(":/sprites/goku_walk1.png"));
+    spritesCaminar.append(QPixmap(":/sprites/goku_walk2.png"));
+    spritesCaminar.append(QPixmap(":/sprites/goku_walk3.png"));
+
+    setPixmap(spriteIdle.scaled(60, 60));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+
+    connect(&animacionTimer, &QTimer::timeout, this, &Goku::actualizarFrameCaminar);
+    animacionTimer.setInterval(150);
+    frameActual = 0;
+    caminando = false;
+
+    sonidoGolpe.setSource(QUrl("qrc:/audio/golpe.wav"));
+    sonidoGolpe.setVolume(0.8);
 
     velocidadX = 0.0f;
     velocidadY = 0.0f;
@@ -33,6 +48,7 @@ void Goku::moverIzquierda()
             nuevaX = 0;
         setX(nuevaX);
     }
+    iniciarAnimacionCaminar();
 }
 
 void Goku::moverDerecha()
@@ -46,6 +62,7 @@ void Goku::moverDerecha()
             nuevaX = limite;
         setX(nuevaX);
     }
+    iniciarAnimacionCaminar();
 }
 
 void Goku::saltar()
@@ -65,6 +82,7 @@ void Goku::activarPlaneo()
         if (velocidadY > 4.0f) {
             velocidadY = 4.0f;
         }
+        setPixmap(spritePlaneo.scaled(60, 60));
     }
 }
 
@@ -73,6 +91,8 @@ void Goku::desactivarPlaneo()
     if (estaPlaneando) {
         gravedad = gravedadNormal;
         estaPlaneando = false;
+        if (!caminando)
+            setPixmap(spriteIdle.scaled(60, 60));
     }
 }
 void Goku::recibirDanio(int cantidad)
@@ -81,9 +101,9 @@ void Goku::recibirDanio(int cantidad)
     if (vida < 0) {
         vida = 0;
     }
+    sonidoGolpe.play();
     actualizarHUD();
 }
-
 void Goku::curarCompleto()
 {
     vida = 100;
@@ -148,4 +168,31 @@ void Goku::actualizarFisica()
     } else if (!aterrizo) {
         enElAire = true;
     }
+}
+
+void Goku::iniciarAnimacionCaminar()
+{
+    if (!caminando && !estaPlaneando) {
+        caminando = true;
+        frameActual = 0;
+        animacionTimer.start();
+    }
+}
+
+void Goku::detenerAnimacionCaminar()
+{
+    if (caminando) {
+        caminando = false;
+        animacionTimer.stop();
+        if (!estaPlaneando)
+            setPixmap(spriteIdle.scaled(60, 60));
+    }
+}
+
+void Goku::actualizarFrameCaminar()
+{
+    if (!caminando || spritesCaminar.isEmpty())
+        return;
+    frameActual = (frameActual + 1) % spritesCaminar.size();
+    setPixmap(spritesCaminar[frameActual].scaled(60, 60));
 }
