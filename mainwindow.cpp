@@ -79,18 +79,29 @@ void MainWindow::iniciarNivel(int numero) {
     escena->addItem(goku);
     actualizarCamara();
 
-    // Crear plataformas
-    Plataforma *p1 = new Plataforma(400, 400, 100, 20);
+    // Crear plataformas iniciales
+    Plataforma *p1 = new Plataforma(300, 500, 100, 20);
     escena->addItem(p1);
     Plataformas.append(p1);
-
-    Plataforma *p2 = new Plataforma(700, 300, 120, 20);
+    Plataforma *p2 = new Plataforma(600, 320, 120, 20);
     escena->addItem(p2);
     Plataformas.append(p2);
 
+    // Agregar plataformas adicionales
+    Plataforma *p3 = new Plataforma(900, 200, 100, 20);
+    escena->addItem(p3);
+    Plataformas.append(p3);
+
+    Plataforma *p4 = new Plataforma(1100, 400, 100, 20);
+    escena->addItem(p4);
+    Plataformas.append(p4);
+
+    Plataforma *p5 = new Plataforma(1300, 200, 100, 20);
+    escena->addItem(p5);
+    Plataformas.append(p5);
     // Meta del nivel
     metaFinal = new MetaFinal();
-    metaFinal->setPos(1500, 400);
+    metaFinal->setPos(1500, 250);
     escena->addItem(metaFinal);
 
     // Crear HUD de vida
@@ -187,16 +198,25 @@ void MainWindow::actualizarEnemigos()
 
 void MainWindow::crearEnemigo()
 {
-    EnemigoVolador *enemigo = new EnemigoVolador();
-    float yPos = QRandomGenerator::global()->bounded(100, 500);
-    enemigo->setPos(800, yPos);
-    enemigo->establecerYInicial(yPos);
-    escena->addItem(enemigo);
-    enemigos.append(enemigo);
-    timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
+        EnemigoVolador *enemigo = new EnemigoVolador();
+    // Generar de 4 a 5 enemigos para incrementar la dificultad
+    int cantidad = QRandomGenerator::global()->bounded(4, 6); // 4 o 5 enemigos
+
+    // Valor base aleatorio para distribuirlos verticalmente
+    float baseY = QRandomGenerator::global()->bounded(50, 551 - cantidad * 70);
+    for (int i = 0; i < cantidad; ++i) {
+        EnemigoVolador *enemigo = new EnemigoVolador();
+
+        // Separar mas los enemigos en el eje Y
+        float yPos = baseY + i * 70;
+
+        enemigo->setPos(1600 + i * 40, yPos); // ligero desplazamiento horizontal
+        enemigo->establecerYInicial(yPos);
+        escena->addItem(enemigo);
+        enemigos.append(enemigo);
+    }
+    timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(1500, 3501));
 }
-
-
 
 
 void MainWindow::verificarColisiones()

@@ -8,7 +8,7 @@ EnemigoVolador::EnemigoVolador(QObject *parent)
     QPixmap sprite(":/sprites/enemigo_volador.png");
     setPixmap(sprite.scaled(60, 60));
 
-    velocidadX = -3.0f;
+    velocidadX = -19.0f;
     yInicial = 0.0f;
     amplitud = 40.0f;
     frecuencia = 0.1f;

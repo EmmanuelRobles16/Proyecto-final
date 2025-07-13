@@ -3,5 +3,6 @@
     <file alias="goku.png">sprites/goku.png</file>
     <file alias="fondo_nivel_1.png">sprites/fondo_nivel_1.png</file>
     <file alias="enemigo_volador.png">sprites/enemigo_volador.png</file>
-  </qresource>
+    <file alias="plataforma.png">sprites/plataforma.png</file>
+    </qresource>
 </RCC>

@@ -1,12 +1,12 @@
 #include "plataforma.h"
-#include <QBrush>
-#include <QPen>
+#include <QPixmap>
+#include <QGraphicsScene>
 
 Plataforma::Plataforma(qreal x, qreal y, qreal width, qreal height, QGraphicsItem *parent)
-    : QGraphicsRectItem(parent)
+    : QGraphicsPixmapItem(parent)
 {
-    setRect(0, 0, width, height);
+        QPixmap sprite(":/sprites/plataforma.png");
+    setPixmap(sprite.scaled(width, height));
     setPos(x, y);
-    setBrush(QBrush(Qt::darkGray));
-    setPen(QPen(Qt::NoPen));
+    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 }

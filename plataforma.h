@@ -4,9 +4,12 @@
 #include <QGraphicsRectItem>
 #include <QObject>
 
-class Plataforma : public QGraphicsRectItem
+#include <QGraphicsPixmapItem>
+#include <QObject>
+
+    class Plataforma : public QGraphicsPixmapItem
 {
-public:
+    public:
     Plataforma(qreal x, qreal y, qreal width, qreal height, QGraphicsItem *parent = nullptr);
 };
 
