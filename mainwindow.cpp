@@ -5,6 +5,7 @@
 #include "hud.h"
 #include <QRandomGenerator>
 #include <QGraphicsScene>
+#include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QPainter>
 #include <QTimer>
@@ -15,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setDragMode(QGraphicsView::NoDrag);
 }
 
 MainWindow::~MainWindow() {
@@ -61,6 +65,7 @@ void MainWindow::iniciarNivel(int numero) {
     goku = new Goku();
     goku->setPos(100, 500);
     escena->addItem(goku);
+    actualizarCamara();
 
     // Crear HUD de vida
     hud = new HUD();
@@ -70,10 +75,10 @@ void MainWindow::iniciarNivel(int numero) {
     connect(goku, &Goku::vidaActualizada, hud, &HUD::actualizar);
     hud->actualizar(goku->getVida());
 
-    // Timer para la física
+    // Timer principal del juego (física y cámara)
     if (!timer) {
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, this, &::MainWindow::actualizarEnemigos);
+        connect(timer, &QTimer::timeout, this, &MainWindow::actualizarJuego);
     }
         timer->start(30);
 
@@ -205,16 +210,11 @@ void MainWindow::actualizarCamara()
     const qreal halfView = viewWidth / 2.0;
     const qreal sceneWidth = escena->width();
 
-    // Limitar posicion de goku dentro del mapa
+    // Limitar posición de Goku dentro del mapa
     qreal limiteIzquierdo = 0.0;
     qreal limiteDerecho = sceneWidth - goku->boundingRect().width();
+    limitarX(goku, limiteIzquierdo, limiteDerecho);
     qreal nuevaX = goku->x();
-    if (nuevaX < limiteIzquierdo)
-        nuevaX = limiteIzquierdo;
-    else if (nuevaX > limiteDerecho)
-        nuevaX = limiteDerecho;
-    if (nuevaX != goku->x())
-        goku->setX(nuevaX);
 
     // Calcular centro deseado para la vista
     qreal centroX = nuevaX;
@@ -233,3 +233,13 @@ void MainWindow::actualizarCamara()
     }
 }
 
+void MainWindow::limitarX(QGraphicsItem *item, qreal minX, qreal maxX)
+{
+    if (!item) return;
+    qreal x = item->x();
+    if (x < minX)
+        x = minX;
+    else if (x > maxX)
+        x = maxX;
+    item->setX(x);
+}

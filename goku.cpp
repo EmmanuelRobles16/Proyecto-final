@@ -102,6 +102,14 @@ void Goku::actualizarFisica()
     // Actualizar posicion con velocidades actuales
     setPos(x() + velocidadX, y() + velocidadY);
 
+    // Limitar movimiento horizontal al ancho de la escena
+    if (scene()) {
+        qreal maxX = scene()->width() - boundingRect().width();
+        if (x() < 0)
+            setX(0);
+        else if (x() > maxX)
+            setX(maxX);
+    }
     // Verificar colision con el suelo
     if (y() >= 500) {
         setPos(x(), 500);

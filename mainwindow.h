@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QGraphicsItem>
 #include "goku.h"
 #include "enemigovolador.h"
 #include "hud.h"
@@ -35,6 +36,7 @@ private slots:
     void actualizarCamara();
 
 private:
+    void limitarX(QGraphicsItem *item, qreal minX, qreal maxX);
     Ui::MainWindow *ui;
     QGraphicsScene *escena = nullptr;
     Goku *goku = nullptr;
