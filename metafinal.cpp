@@ -3,7 +3,8 @@
 
 MetaFinal::MetaFinal()
 {
-    QPixmap pix(40, 40);
-    pix.fill(Qt::yellow);
-    setPixmap(pix);
+    QPixmap sprite(":/sprites/krilin.png");
+    // Utilizar a Krilin como indicador de meta
+    setPixmap(sprite.scaled(80, 60));
+    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 }

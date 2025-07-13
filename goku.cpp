@@ -75,7 +75,6 @@ void Goku::desactivarPlaneo()
         estaPlaneando = false;
     }
 }
-
 void Goku::recibirDanio(int cantidad)
 {
     vida -= cantidad;
@@ -85,6 +84,11 @@ void Goku::recibirDanio(int cantidad)
     actualizarHUD();
 }
 
+void Goku::curarCompleto()
+{
+    vida = 100;
+    actualizarHUD();
+}
 void Goku::actualizarHUD()
 {
     emit vidaActualizada(vida);

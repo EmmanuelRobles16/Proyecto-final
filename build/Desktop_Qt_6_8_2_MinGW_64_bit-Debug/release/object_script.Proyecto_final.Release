@@ -1,6 +1,7 @@
 release/camara.o
 release/enemigovolador.o
 release/entidad.o
+release/esferadragon.o
 release/fisica.o
 release/goku.o
 release/hud.o
@@ -9,8 +10,10 @@ release/juego.o
 release/main.o
 release/mainwindow.o
 release/menu.o
+release/metafinal.o
 release/nivel.o
 release/personaje.o
+release/plataforma.o
 release/proyectil.o
 release/tenshinhan.o
 release/qrc_resources.o

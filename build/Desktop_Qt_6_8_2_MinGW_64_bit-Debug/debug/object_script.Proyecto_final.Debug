@@ -1,6 +1,7 @@
 debug/camara.o
 debug/enemigovolador.o
 debug/entidad.o
+debug/esferadragon.o
 debug/fisica.o
 debug/goku.o
 debug/hud.o
@@ -9,8 +10,10 @@ debug/juego.o
 debug/main.o
 debug/mainwindow.o
 debug/menu.o
+debug/metafinal.o
 debug/nivel.o
 debug/personaje.o
+debug/plataforma.o
 debug/proyectil.o
 debug/tenshinhan.o
 debug/qrc_resources.o

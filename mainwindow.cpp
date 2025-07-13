@@ -5,6 +5,7 @@
 #include "hud.h"
 #include "plataforma.h"
 #include "metafinal.h"
+#include "esferadragon.h"
 #include <QRandomGenerator>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -46,6 +47,11 @@ MainWindow::~MainWindow() {
         delete p;
     }
     Plataformas.clear();
+    if (esfera) {
+        escena->removeItem(esfera);
+        delete esfera;
+        esfera = nullptr;
+    }
     if (metaFinal) {
         escena->removeItem(metaFinal);
         delete metaFinal;
@@ -56,7 +62,7 @@ MainWindow::~MainWindow() {
 }
 void MainWindow::iniciarNivel(int numero) {
     // Escena más ancha que la vista para permitir scroll horizontal
-    escena = new QGraphicsScene(0, 0, 1600, 600, this);
+    escena = new QGraphicsScene(0, 0, 2400, 600, this);
     ui->graphicsView->setScene(escena);
 
     escena->setBackgroundBrush(Qt::black); // color de respaldo
@@ -99,9 +105,32 @@ void MainWindow::iniciarNivel(int numero) {
     Plataforma *p5 = new Plataforma(1300, 200, 100, 20);
     escena->addItem(p5);
     Plataformas.append(p5);
+
+    // Nuevas plataformas para el tramo extendido
+    Plataforma *p6 = new Plataforma(1500, 450, 100, 20);
+    escena->addItem(p6);
+    Plataformas.append(p6);
+
+    Plataforma *p7 = new Plataforma(1700, 350, 120, 20);
+    escena->addItem(p7);
+    Plataformas.append(p7);
+
+    Plataforma *p8 = new Plataforma(1900, 250, 100, 20);
+    escena->addItem(p8);
+    Plataformas.append(p8);
+
+    Plataforma *p9 = new Plataforma(2100, 180, 100, 20);
+    escena->addItem(p9);
+    Plataformas.append(p9);
+
+    // Esfera del Dragon
+    esfera = new EsferaDragon();
+    esfera->setPos(1800, 300);
+    escena->addItem(esfera);
+
     // Meta del nivel
     metaFinal = new MetaFinal();
-    metaFinal->setPos(1500, 250);
+    metaFinal->setPos(2350, 150);
     escena->addItem(metaFinal);
 
     // Crear HUD de vida
@@ -200,7 +229,7 @@ void MainWindow::crearEnemigo()
 {
         EnemigoVolador *enemigo = new EnemigoVolador();
     // Generar de 4 a 5 enemigos para incrementar la dificultad
-    int cantidad = QRandomGenerator::global()->bounded(4, 6); // 4 o 5 enemigos
+    int cantidad = QRandomGenerator::global()->bounded(2, 5); // 4 o 5 enemigos
 
     // Valor base aleatorio para distribuirlos verticalmente
     float baseY = QRandomGenerator::global()->bounded(50, 551 - cantidad * 70);
@@ -210,7 +239,7 @@ void MainWindow::crearEnemigo()
         // Separar mas los enemigos en el eje Y
         float yPos = baseY + i * 70;
 
-        enemigo->setPos(1600 + i * 40, yPos); // ligero desplazamiento horizontal
+        enemigo->setPos(2100 + i * 40, yPos); // ligero desplazamiento horizontal
         enemigo->establecerYInicial(yPos);
         escena->addItem(enemigo);
         enemigos.append(enemigo);
@@ -235,6 +264,12 @@ void MainWindow::verificarColisiones()
                 close();
                 return;
             }
+        }
+        if (EsferaDragon* esf = dynamic_cast<EsferaDragon*>(item)) {
+            goku->curarCompleto();
+            escena->removeItem(esf);
+            if (esfera == esf) esfera = nullptr;
+            delete esf;
         }
         if (MetaFinal* meta = dynamic_cast<MetaFinal*>(item)) {
             QMessageBox::information(this, "Nivel completado", "\xC2\xA1Nivel completado!");

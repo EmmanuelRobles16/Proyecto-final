@@ -17,6 +17,7 @@ signals:
 
 public slots:
     void recibirDanio(int cantidad);
+    void curarCompleto();
 
     void moverIzquierda();
     void moverDerecha();

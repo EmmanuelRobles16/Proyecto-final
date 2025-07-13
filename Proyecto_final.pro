@@ -12,6 +12,7 @@ SOURCES += \
     camara.cpp \
     enemigovolador.cpp \
     entidad.cpp \
+    esferadragon.cpp \
     fisica.cpp \
     goku.cpp \
     hud.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     camara.h \
     enemigovolador.h \
     entidad.h \
+    esferadragon.h \
     fisica.h \
     goku.h \
     hud.h \

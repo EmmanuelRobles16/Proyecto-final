@@ -11,6 +11,7 @@
 #include "hud.h"
 #include "plataforma.h"
 #include "metafinal.h"
+#include "esferadragon.h"
 #include <QVector>
 
 namespace Ui {
@@ -46,6 +47,7 @@ private:
     QVector<EnemigoVolador*> enemigos;
     QVector<Plataforma*> Plataformas;
     MetaFinal *metaFinal = nullptr;
+    EsferaDragon *esfera = nullptr;
     QTimer *timerEnemigos = nullptr;
     QTimer *timerGeneradorEnemigos = nullptr;
     QTimer *timerColisiones = nullptr;

@@ -43,6 +43,7 @@ static constexpr auto qt_meta_stringdata_ZN4GokuE = QtMocHelpers::stringData(
     "nuevaVida",
     "recibirDanio",
     "cantidad",
+    "curarCompleto",
     "moverIzquierda",
     "moverDerecha",
     "saltar",
@@ -61,7 +62,7 @@ Q_CONSTINIT static const uint qt_meta_data_ZN4GokuE[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -69,23 +70,25 @@ Q_CONSTINIT static const uint qt_meta_data_ZN4GokuE[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   68,    2, 0x06,    1 /* Public */,
+       1,    1,   74,    2, 0x06,    1 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       4,    1,   71,    2, 0x0a,    3 /* Public */,
-       6,    0,   74,    2, 0x0a,    5 /* Public */,
-       7,    0,   75,    2, 0x0a,    6 /* Public */,
-       8,    0,   76,    2, 0x0a,    7 /* Public */,
-       9,    0,   77,    2, 0x0a,    8 /* Public */,
-      10,    0,   78,    2, 0x0a,    9 /* Public */,
-      11,    0,   79,    2, 0x0a,   10 /* Public */,
-      12,    0,   80,    2, 0x10a,   11 /* Public | MethodIsConst  */,
+       4,    1,   77,    2, 0x0a,    3 /* Public */,
+       6,    0,   80,    2, 0x0a,    5 /* Public */,
+       7,    0,   81,    2, 0x0a,    6 /* Public */,
+       8,    0,   82,    2, 0x0a,    7 /* Public */,
+       9,    0,   83,    2, 0x0a,    8 /* Public */,
+      10,    0,   84,    2, 0x0a,    9 /* Public */,
+      11,    0,   85,    2, 0x0a,   10 /* Public */,
+      12,    0,   86,    2, 0x0a,   11 /* Public */,
+      13,    0,   87,    2, 0x10a,   12 /* Public | MethodIsConst  */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    3,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    5,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -112,6 +115,8 @@ Q_CONSTINIT const QMetaObject Goku::staticMetaObject = { {
         // method 'recibirDanio'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'curarCompleto'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'moverIzquierda'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'moverDerecha'
@@ -137,13 +142,14 @@ void Goku::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         switch (_id) {
         case 0: _t->vidaActualizada((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 1: _t->recibirDanio((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 2: _t->moverIzquierda(); break;
-        case 3: _t->moverDerecha(); break;
-        case 4: _t->saltar(); break;
-        case 5: _t->actualizarFisica(); break;
-        case 6: _t->activarPlaneo(); break;
-        case 7: _t->desactivarPlaneo(); break;
-        case 8: { bool _r = _t->estaEnElAire();
+        case 2: _t->curarCompleto(); break;
+        case 3: _t->moverIzquierda(); break;
+        case 4: _t->moverDerecha(); break;
+        case 5: _t->saltar(); break;
+        case 6: _t->actualizarFisica(); break;
+        case 7: _t->activarPlaneo(); break;
+        case 8: _t->desactivarPlaneo(); break;
+        case 9: { bool _r = _t->estaEnElAire();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
@@ -181,14 +187,14 @@ int Goku::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }
