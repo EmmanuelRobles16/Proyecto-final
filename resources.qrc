@@ -13,7 +13,7 @@
     <file alias="krilin.png">sprites/krilin.png</file>
       </qresource>
       <qresource prefix="/audio">
-      <file alias="musica_nivel1.wav">audio/musica_nivel1.wav</file>
+        <file alias="musica_nivel1.wav">audio/musica_nivel1.wav</file>
         <file alias="golpe.wav">audio/golpe.wav</file>
       </qresource>
     </RCC>
