@@ -14,6 +14,8 @@ debug/personaje.o
 debug/proyectil.o
 debug/tenshinhan.o
 debug/qrc_resources.o
+debug/moc_enemigovolador.o
 debug/moc_goku.o
+debug/moc_hud.o
 debug/moc_mainwindow.o
 debug/moc_menu.o

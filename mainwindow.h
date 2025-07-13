@@ -7,6 +7,7 @@
 #include <QTimer>
 #include "goku.h"
 #include "enemigovolador.h"
+#include "hud.h"
 #include <QVector>
 
 namespace Ui {
@@ -29,6 +30,7 @@ protected:
 private slots:
     void actualizarEnemigos();
     void crearEnemigo();
+    void verificarColisiones();
 
 private:
     Ui::MainWindow *ui;
@@ -38,5 +40,8 @@ private:
     QVector<EnemigoVolador*> enemigos;
     QTimer *timerEnemigos = nullptr;
     QTimer *timerGeneradorEnemigos = nullptr;
+    QTimer *timerColisiones = nullptr;
+    HUD *hud = nullptr;
 };
+
 #endif // MAINWINDOW_H

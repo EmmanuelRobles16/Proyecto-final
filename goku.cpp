@@ -4,8 +4,8 @@
 Goku::Goku(QObject *parent)
     : QObject(parent)
 {
-    QPixmap sprite(":/sprites/goku.png");
-    setPixmap(sprite.scaled(60, 60));
+        QPixmap sprite(":/sprites/goku.png");
+        setPixmap(sprite.scaled(60, 60));
 
     velocidadX = 0.0f;
     velocidadY = 0.0f;
@@ -16,6 +16,9 @@ Goku::Goku(QObject *parent)
     estaPlaneando = false;
     framesPlaneo = 0;
     maxFramesPlaneo = 60;
+    vida = 100;
+
+    actualizarHUD();
 }
 
 void Goku::moverIzquierda()
@@ -61,6 +64,20 @@ void Goku::desactivarPlaneo()
         gravedad = gravedadNormal;
         estaPlaneando = false;
     }
+}
+
+void Goku::recibirDanio(int cantidad)
+{
+    vida -= cantidad;
+    if (vida < 0) {
+        vida = 0;
+    }
+    actualizarHUD();
+}
+
+void Goku::actualizarHUD()
+{
+    emit vidaActualizada(vida);
 }
 void Goku::actualizarFisica()
 {

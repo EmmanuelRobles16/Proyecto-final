@@ -2,10 +2,12 @@
 #include "ui_mainwindow.h"
 #include "goku.h"
 #include "enemigovolador.h"
+#include "hud.h"
 #include <QRandomGenerator>
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QTimer>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,14 +26,17 @@ MainWindow::~MainWindow() {
     if (timerGeneradorEnemigos) {
         timerGeneradorEnemigos->stop();
     }
+    if (timerColisiones) {
+        timerColisiones->stop();
+    }
     for (EnemigoVolador* e : enemigos) {
         escena->removeItem(e);
         delete e;
     }
     enemigos.clear();
+    delete hud;
     delete ui;
 }
-
 void MainWindow::iniciarNivel(int numero) {
     escena = new QGraphicsScene(0, 0, 800, 600, this);
     ui->graphicsView->setScene(escena);
@@ -49,6 +54,13 @@ void MainWindow::iniciarNivel(int numero) {
     goku = new Goku();
     goku->setPos(100, 500);
     escena->addItem(goku);
+
+    // Crear HUD de vida
+    hud = new HUD();
+    hud->setPos(10, 10);
+    escena->addItem(hud);
+    connect(goku, &Goku::vidaActualizada, hud, &HUD::actualizar);
+    hud->actualizar(goku->getVida());
 
     // Timer para la física
     if (!timer) {
@@ -70,6 +82,13 @@ void MainWindow::iniciarNivel(int numero) {
         connect(timerGeneradorEnemigos, &QTimer::timeout, this, &MainWindow::crearEnemigo);
     }
     timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
+
+    // Timer para verificar colisiones
+    if (!timerColisiones) {
+        timerColisiones = new QTimer(this);
+        connect(timerColisiones, &QTimer::timeout, this, &MainWindow::verificarColisiones);
+    }
+    timerColisiones->start(30);
 
     this->setFocus();
 }
@@ -135,6 +154,28 @@ void MainWindow::crearEnemigo()
     enemigo->establecerYInicial(yPos);
     escena->addItem(enemigo);
     enemigos.append(enemigo);
-
     timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
+}
+
+
+
+
+void MainWindow::verificarColisiones()
+{
+    if (!goku) return;
+    QList<QGraphicsItem*> colisiones = goku->collidingItems();
+    for (QGraphicsItem* item : colisiones) {
+        EnemigoVolador* enemigo = dynamic_cast<EnemigoVolador*>(item);
+        if (enemigo) {
+            goku->recibirDanio(20);
+            escena->removeItem(enemigo);
+            enemigos.removeOne(enemigo);
+            delete enemigo;
+            if (goku->getVida() <= 0) {
+                QMessageBox::information(this, "Fin del juego", "Goku ha sido derrotado");
+                close();
+                return;
+            }
+        }
+    }
 }
