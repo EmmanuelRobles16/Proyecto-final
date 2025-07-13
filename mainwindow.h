@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QKeyEvent>
+#include "goku.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,8 +19,13 @@ public:
 
     void iniciarNivel(int numero);
 
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
+    QGraphicsScene *escena = nullptr;
+    Goku *goku = nullptr;
 };
 
 #endif // MAINWINDOW_H

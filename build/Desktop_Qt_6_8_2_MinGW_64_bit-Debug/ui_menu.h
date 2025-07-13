@@ -17,7 +17,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_menu
+class Ui_Menu
 {
 public:
     QVBoxLayout *verticalLayout;
@@ -49,15 +49,15 @@ public:
 
     void retranslateUi(QWidget *menu)
     {
-        menu->setWindowTitle(QCoreApplication::translate("menu", "Form", nullptr));
-        btnNivel1->setText(QCoreApplication::translate("menu", "Iniciar Nivel 1", nullptr));
-        btnNivel2->setText(QCoreApplication::translate("menu", "Iniciar Nivel 2", nullptr));
+        menu->setWindowTitle(QCoreApplication::translate("Menu", "Form", nullptr));
+        btnNivel1->setText(QCoreApplication::translate("Menu", "Iniciar Nivel 1", nullptr));
+        btnNivel2->setText(QCoreApplication::translate("Menu", "Iniciar Nivel 2", nullptr));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class menu: public Ui_menu {};
+    class Menu: public Ui_Menu {};
 } // namespace Ui
 
 QT_END_NAMESPACE
