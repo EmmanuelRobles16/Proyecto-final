@@ -8,7 +8,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::iniciarNivel(int numero) {
+    // Por ahora solo cambia el título de la ventana como prueba
+    setWindowTitle(QString("Nivel %1").arg(numero));
 }

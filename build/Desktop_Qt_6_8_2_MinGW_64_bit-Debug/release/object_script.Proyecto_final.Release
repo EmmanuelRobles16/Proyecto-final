@@ -1,0 +1,17 @@
+release/camara.o
+release/enemigovolador.o
+release/entidad.o
+release/fisica.o
+release/goku.o
+release/hud.o
+release/item.o
+release/juego.o
+release/main.o
+release/mainwindow.o
+release/menu.o
+release/nivel.o
+release/personaje.o
+release/proyectil.o
+release/tenshinhan.o
+release/moc_mainwindow.o
+release/moc_menu.o

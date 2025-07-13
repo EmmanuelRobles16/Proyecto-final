@@ -9,14 +9,41 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    camara.cpp \
+    enemigovolador.cpp \
+    entidad.cpp \
+    fisica.cpp \
+    goku.cpp \
+    hud.cpp \
+    item.cpp \
+    juego.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    menu.cpp \
+    nivel.cpp \
+    personaje.cpp \
+    proyectil.cpp \
+    tenshinhan.cpp
 
 HEADERS += \
-    mainwindow.h
+    camara.h \
+    enemigovolador.h \
+    entidad.h \
+    fisica.h \
+    goku.h \
+    hud.h \
+    item.h \
+    juego.h \
+    mainwindow.h \
+    menu.h \
+    nivel.h \
+    personaje.h \
+    proyectil.h \
+    tenshinhan.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    menu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

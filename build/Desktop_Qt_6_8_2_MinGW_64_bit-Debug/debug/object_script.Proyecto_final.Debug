@@ -1,0 +1,17 @@
+debug/camara.o
+debug/enemigovolador.o
+debug/entidad.o
+debug/fisica.o
+debug/goku.o
+debug/hud.o
+debug/item.o
+debug/juego.o
+debug/main.o
+debug/mainwindow.o
+debug/menu.o
+debug/nivel.o
+debug/personaje.o
+debug/proyectil.o
+debug/tenshinhan.o
+debug/moc_mainwindow.o
+debug/moc_menu.o
