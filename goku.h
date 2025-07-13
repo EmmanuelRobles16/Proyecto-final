@@ -14,11 +14,19 @@ public:
     void moverDerecha();
     void saltar();
     void actualizarFisica();
+    void activarPlaneo();
+    void desactivarPlaneo();
+    bool estaEnElAire() const { return enElAire; }
 private:
     float velocidadX;
     float velocidadY;
     float gravedad;
+    float gravedadNormal;
+    float gravedadSuave;
     bool enElAire;
+    bool estaPlaneando;
+    int framesPlaneo;
+    int maxFramesPlaneo;
 };
 
 #endif // GOKU_H

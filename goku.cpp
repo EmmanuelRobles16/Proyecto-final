@@ -9,9 +9,15 @@ Goku::Goku(QObject *parent)
 
     velocidadX = 0.0f;
     velocidadY = 0.0f;
-    gravedad = 1.0f;
+    gravedadNormal = 1.5f;
+    gravedadSuave = gravedadNormal / 4.0f;
+    gravedad = gravedadNormal;
     enElAire = false;
+    estaPlaneando = false;
+    framesPlaneo = 0;
+    maxFramesPlaneo = 60;
 }
+
 void Goku::moverIzquierda()
 {
     if (enElAire) {
@@ -36,10 +42,36 @@ void Goku::saltar()
         enElAire = true;
     }
 }
+
+void Goku::activarPlaneo()
+{
+    if (enElAire && !estaPlaneando) {
+        gravedad = gravedadSuave;
+        estaPlaneando = true;
+        framesPlaneo = 0;
+        if (velocidadY > 4.0f) {
+            velocidadY = 4.0f;
+        }
+    }
+}
+
+void Goku::desactivarPlaneo()
+{
+    if (estaPlaneando) {
+        gravedad = gravedadNormal;
+        estaPlaneando = false;
+    }
+}
 void Goku::actualizarFisica()
 {
     // Aplicar gravedad
     velocidadY += gravedad;
+    if (estaPlaneando) {
+        ++framesPlaneo;
+        if (framesPlaneo >= maxFramesPlaneo) {
+            desactivarPlaneo();
+        }
+    }
 
     // Actualizar posicion con velocidades actuales
     setPos(x() + velocidadX, y() + velocidadY);
@@ -50,5 +82,6 @@ void Goku::actualizarFisica()
         velocidadY = 0.0f;
         velocidadX = 0.0f;
         enElAire = false;
+        desactivarPlaneo();
     }
 }

@@ -63,9 +63,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Space:
         goku->saltar();
+        goku->activarPlaneo();
         break;
     default:
         QMainWindow::keyPressEvent(event);
         break;
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    if (!goku) {
+        QMainWindow::keyReleaseEvent(event);
+        return;
+    }
+
+    if (event->key() == Qt::Key_Space) {
+        goku->desactivarPlaneo();
+    } else {
+        QMainWindow::keyReleaseEvent(event);
     }
 }
