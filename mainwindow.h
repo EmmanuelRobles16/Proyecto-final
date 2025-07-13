@@ -31,6 +31,8 @@ private slots:
     void actualizarEnemigos();
     void crearEnemigo();
     void verificarColisiones();
+    void actualizarJuego();
+    void actualizarCamara();
 
 private:
     Ui::MainWindow *ui;

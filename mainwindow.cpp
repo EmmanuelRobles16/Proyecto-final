@@ -5,6 +5,7 @@
 #include "hud.h"
 #include <QRandomGenerator>
 #include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 #include <QPainter>
 #include <QTimer>
 #include <QMessageBox>
@@ -38,18 +39,24 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 void MainWindow::iniciarNivel(int numero) {
-    escena = new QGraphicsScene(0, 0, 800, 600, this);
+    // Escena más ancha que la vista para permitir scroll horizontal
+    escena = new QGraphicsScene(0, 0, 1600, 600, this);
     ui->graphicsView->setScene(escena);
-    escena->setBackgroundBrush(Qt::black);  // Fondo de respaldo si algo falla
 
+    escena->setBackgroundBrush(Qt::black); // color de respaldo
+
+    // Fondo que se repite horizontalmente a lo largo de la escena
     if (numero == 1) {
-        // Cargar la imagen de fondo de tamaño exacto (800x600)
-        QPixmap fondo(":/sprites/fondo_nivel_1.png");
-        QGraphicsPixmapItem* fondoItem = escena->addPixmap(fondo);
-        fondoItem->setZValue(-1);  // Detrás de Goku
-        fondoItem->setPos(0, 0);   // Posicionado exactamente desde la esquina
+        QPixmap fondoBase(":/sprites/fondo_nivel_1.png");
+        QPixmap fondoTile(escena->width(), escena->height());
+        fondoTile.fill(Qt::transparent);
+        QPainter p(&fondoTile);
+        p.drawTiledPixmap(QRectF(0, 0, escena->width(), escena->height()), fondoBase);
+        p.end();
+        QGraphicsPixmapItem *fondoItem = escena->addPixmap(fondoTile);
+        fondoItem->setZValue(-1); // detrás de todo
+        fondoItem->setPos(0, 0);
     }
-
     // Agregar a Goku en la escena
     goku = new Goku();
     goku->setPos(100, 500);
@@ -57,6 +64,7 @@ void MainWindow::iniciarNivel(int numero) {
 
     // Crear HUD de vida
     hud = new HUD();
+    hud->setZValue(10); // por encima de otros elementos
     hud->setPos(10, 30);
     escena->addItem(hud);
     connect(goku, &Goku::vidaActualizada, hud, &HUD::actualizar);
@@ -64,10 +72,10 @@ void MainWindow::iniciarNivel(int numero) {
 
     // Timer para la física
     if (!timer) {
-        timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, goku, &Goku::actualizarFisica);
+            timer = new QTimer(this);
+            connect(timer, &QTimer::timeout, this, &::MainWindow::actualizarEnemigos);
     }
-    timer->start(30);
+        timer->start(30);
 
     // Timer para movimiento de enemigos
     if (!timerEnemigos) {
@@ -179,3 +187,49 @@ void MainWindow::verificarColisiones()
         }
     }
 }
+
+
+void MainWindow::actualizarJuego()
+{
+    if (!goku) return;
+    goku->actualizarFisica();
+    actualizarCamara();
+}
+
+void MainWindow::actualizarCamara()
+{
+    if (!goku || !escena) return;
+
+    QGraphicsView *view = ui->graphicsView;
+    const qreal viewWidth = view->viewport()->width();
+    const qreal halfView = viewWidth / 2.0;
+    const qreal sceneWidth = escena->width();
+
+    // Limitar posicion de goku dentro del mapa
+    qreal limiteIzquierdo = 0.0;
+    qreal limiteDerecho = sceneWidth - goku->boundingRect().width();
+    qreal nuevaX = goku->x();
+    if (nuevaX < limiteIzquierdo)
+        nuevaX = limiteIzquierdo;
+    else if (nuevaX > limiteDerecho)
+        nuevaX = limiteDerecho;
+    if (nuevaX != goku->x())
+        goku->setX(nuevaX);
+
+    // Calcular centro deseado para la vista
+    qreal centroX = nuevaX;
+    qreal margenIzquierdo = halfView;
+    qreal margenDerecho = sceneWidth - halfView;
+
+    if (centroX < margenIzquierdo)
+        centroX = margenIzquierdo;
+    else if (centroX > margenDerecho)
+        centroX = margenDerecho;
+    // Centrar la vista solo horizontalmente
+    view->centerOn(centroX, escena->height() / 2.0);
+        // Mantener el HUD fijo en la vista
+    if (hud) {
+        hud->setPos(view->mapToScene(QPoint(10, 30)));
+    }
+}
+

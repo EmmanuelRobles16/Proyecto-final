@@ -1,5 +1,6 @@
 #include "goku.h"
 #include <QPixmap>
+#include <QGraphicsScene>
 
 Goku::Goku(QObject *parent)
     : QObject(parent)
@@ -26,15 +27,23 @@ void Goku::moverIzquierda()
     if (enElAire) {
         velocidadX = -5.0f;
     } else {
-        setPos(x() - 5, y());
+        qreal nuevaX = x() - 5;
+        if (nuevaX < 0)
+            nuevaX = 0;
+        setX(nuevaX);
     }
 }
+
 void Goku::moverDerecha()
 {
     if (enElAire) {
         velocidadX = 5.0f;
     } else {
-        setPos(x() + 5, y());
+        qreal limite = scene() ? scene()->width() - boundingRect().width() : x() + 5;
+        qreal nuevaX = x() + 5;
+        if (scene() && nuevaX > limite)
+            nuevaX = limite;
+        setX(nuevaX);
     }
 }
 
