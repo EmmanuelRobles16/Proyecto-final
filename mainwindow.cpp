@@ -57,7 +57,7 @@ void MainWindow::iniciarNivel(int numero) {
 
     // Crear HUD de vida
     hud = new HUD();
-    hud->setPos(10, 10);
+    hud->setPos(10, 30);
     escena->addItem(hud);
     connect(goku, &Goku::vidaActualizada, hud, &HUD::actualizar);
     hud->actualizar(goku->getVida());
