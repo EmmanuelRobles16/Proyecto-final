@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QKeyEvent>
+#include <QTimer>
 #include "goku.h"
 
 namespace Ui {
@@ -26,6 +27,7 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene *escena = nullptr;
     Goku *goku = nullptr;
+    QTimer *timer = nullptr;
 };
 
 #endif // MAINWINDOW_H

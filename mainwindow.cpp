@@ -3,6 +3,7 @@
 #include "goku.h"
 #include <QGraphicsScene>
 #include <QPainter>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,9 +13,11 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
+    if (timer) {
+        timer->stop();
+    }
     delete ui;
 }
-
 void MainWindow::iniciarNivel(int numero) {
     escena = new QGraphicsScene(0, 0, 800, 600, this);
     ui->graphicsView->setScene(escena);
@@ -33,7 +36,13 @@ void MainWindow::iniciarNivel(int numero) {
     goku->setPos(100, 500);
     escena->addItem(goku);
 
-    // Captura de teclado
+    // Timer para la física
+    if (!timer) {
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, goku, &Goku::actualizarFisica);
+    }
+    timer->start(30);
+
     this->setFocus();
 }
 
