@@ -14,11 +14,8 @@ public:
     void moverDerecha();
     void saltar();
     void actualizarFisica();
-
 private:
-    int velocidad;
-    int vida;
-
+    float velocidadX;
     float velocidadY;
     float gravedad;
     bool enElAire;
