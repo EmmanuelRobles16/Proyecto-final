@@ -5,8 +5,9 @@
 Goku::Goku(QObject *parent)
     : QObject(parent)
 {
-        QPixmap sprite(":/sprites/goku.png");
-        setPixmap(sprite.scaled(60, 60));
+    QPixmap sprite(":/sprites/goku.png");
+    setPixmap(sprite.scaled(60, 60));
+    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 
     velocidadX = 0.0f;
     velocidadY = 0.0f;
