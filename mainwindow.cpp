@@ -46,10 +46,10 @@ MainWindow::~MainWindow() {
         delete p;
     }
     Plataformas.clear();
-    if (MetaFinal) {
-        escena->removeItem(MetaFinal);
-        delete MetaFinal;
-        MetaFinal = nullptr;
+    if (metaFinal) {
+        escena->removeItem(metaFinal);
+        delete metaFinal;
+        metaFinal = nullptr;
     }
     delete hud;
     delete ui;
@@ -89,9 +89,9 @@ void MainWindow::iniciarNivel(int numero) {
     Plataformas.append(p2);
 
     // Meta del nivel
-    MetaFinal = new class MetaFinal();
-    MetaFinal->setPos(1500, 400);
-    escena->addItem(MetaFinal);
+    metaFinal = new MetaFinal();
+    metaFinal->setPos(1500, 400);
+    escena->addItem(metaFinal);
 
     // Crear HUD de vida
     hud = new HUD();
@@ -216,8 +216,7 @@ void MainWindow::verificarColisiones()
                 return;
             }
         }
-        if ((MetaFinal* Meta = dynamic_cast<class MetaFinal*>(item))) {
-            Q_UNUSED(Meta);
+        if (MetaFinal* meta = dynamic_cast<MetaFinal*>(item)) {
             QMessageBox::information(this, "Nivel completado", "\xC2\xA1Nivel completado!");
             close();
             return;

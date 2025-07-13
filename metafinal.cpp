@@ -1,8 +1,7 @@
 #include "metafinal.h"
 #include <QPixmap>
 
-MetaFinal::MetaFinal(QGraphicsItem *parent)
- : QGraphicsPixmapItem(parent)
+MetaFinal::MetaFinal()
 {
     QPixmap pix(40, 40);
     pix.fill(Qt::yellow);

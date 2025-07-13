@@ -45,7 +45,7 @@ private:
     QTimer *timer = nullptr;
     QVector<EnemigoVolador*> enemigos;
     QVector<Plataforma*> Plataformas;
-    MetaFinal *MetaFinal = nullptr;
+    MetaFinal *metaFinal = nullptr;
     QTimer *timerEnemigos = nullptr;
     QTimer *timerGeneradorEnemigos = nullptr;
     QTimer *timerColisiones = nullptr;

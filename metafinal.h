@@ -5,9 +5,8 @@
 
 class MetaFinal : public QGraphicsPixmapItem
 {
-    Q_OBJECT
 public:
-    explicit MetaFinal(QGraphicsItem *parent = nullptr);
+    MetaFinal();  // constructor básico
 };
 
 #endif // METAFINAL_H
