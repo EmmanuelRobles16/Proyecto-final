@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "goku.h"
+#include "enemigovolador.h"
+#include <QRandomGenerator>
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QTimer>
@@ -16,8 +18,20 @@ MainWindow::~MainWindow() {
     if (timer) {
         timer->stop();
     }
+    if (timerEnemigos) {
+        timerEnemigos->stop();
+    }
+    if (timerGeneradorEnemigos) {
+        timerGeneradorEnemigos->stop();
+    }
+    for (EnemigoVolador* e : enemigos) {
+        escena->removeItem(e);
+        delete e;
+    }
+    enemigos.clear();
     delete ui;
 }
+
 void MainWindow::iniciarNivel(int numero) {
     escena = new QGraphicsScene(0, 0, 800, 600, this);
     ui->graphicsView->setScene(escena);
@@ -42,6 +56,20 @@ void MainWindow::iniciarNivel(int numero) {
         connect(timer, &QTimer::timeout, goku, &Goku::actualizarFisica);
     }
     timer->start(30);
+
+    // Timer para movimiento de enemigos
+    if (!timerEnemigos) {
+        timerEnemigos = new QTimer(this);
+        connect(timerEnemigos, &QTimer::timeout, this, &MainWindow::actualizarEnemigos);
+    }
+    timerEnemigos->start(30);
+
+    // Timer para creacion de enemigos
+    if (!timerGeneradorEnemigos) {
+        timerGeneradorEnemigos = new QTimer(this);
+        connect(timerGeneradorEnemigos, &QTimer::timeout, this, &MainWindow::crearEnemigo);
+    }
+    timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
 
     this->setFocus();
 }
@@ -83,4 +111,30 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     } else {
         QMainWindow::keyReleaseEvent(event);
     }
+}
+void MainWindow::actualizarEnemigos()
+{
+    for (int i = 0; i < enemigos.size(); ) {
+        EnemigoVolador *e = enemigos[i];
+        e->actualizarMovimiento();
+        if (e->estaFueraDePantalla()) {
+            escena->removeItem(e);
+            delete e;
+            enemigos.remove(i);
+        } else {
+            ++i;
+        }
+    }
+}
+
+void MainWindow::crearEnemigo()
+{
+    EnemigoVolador *enemigo = new EnemigoVolador();
+    float yPos = QRandomGenerator::global()->bounded(100, 500);
+    enemigo->setPos(800, yPos);
+    enemigo->establecerYInicial(yPos);
+    escena->addItem(enemigo);
+    enemigos.append(enemigo);
+
+    timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
 }
