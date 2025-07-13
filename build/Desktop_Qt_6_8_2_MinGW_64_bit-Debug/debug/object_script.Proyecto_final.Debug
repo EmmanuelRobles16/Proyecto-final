@@ -13,5 +13,6 @@ debug/nivel.o
 debug/personaje.o
 debug/proyectil.o
 debug/tenshinhan.o
+debug/moc_goku.o
 debug/moc_mainwindow.o
 debug/moc_menu.o

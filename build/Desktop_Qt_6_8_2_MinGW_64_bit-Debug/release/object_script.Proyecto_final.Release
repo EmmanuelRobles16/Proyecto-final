@@ -13,5 +13,6 @@ release/nivel.o
 release/personaje.o
 release/proyectil.o
 release/tenshinhan.o
+release/moc_goku.o
 release/moc_mainwindow.o
 release/moc_menu.o
