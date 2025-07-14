@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
+#include <QPixmap>
 #include "hud.h"
 
 class Tenshinhan : public QObject, public QGraphicsPixmapItem
@@ -19,10 +20,14 @@ signals:
 
 public slots:
     void recibirDanio(int cantidad);
+    void animarAtaque();
 
 private:
     int vida;
     HUD *hud;
+    QPixmap spriteIdle;
+    QPixmap spriteAntesAtaque;
+    QPixmap spriteAtaque;
 };
 
 #endif // TENSHINHAN_H

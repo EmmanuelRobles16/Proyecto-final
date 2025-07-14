@@ -221,7 +221,7 @@ void MainWindow::iniciarNivel(int numero) {
             timerAtaqueTenshinhan = new QTimer(this);
             connect(timerAtaqueTenshinhan, &QTimer::timeout, this, &MainWindow::lanzarProyectiles);
         }
-        timerAtaqueTenshinhan->start(4000);
+        timerAtaqueTenshinhan->start(2000);
 
         if (!timerColisiones) {
             timerColisiones = new QTimer(this);
@@ -482,6 +482,7 @@ void MainWindow::lanzarProyectiles()
 {
     if (!tenshinhan) return;
 
+    tenshinhan->animarAtaque();
     QVector<int> indices;
     if (patronAlterno) {
         indices << 1 << 2; // carriles 3 y 2

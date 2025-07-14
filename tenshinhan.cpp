@@ -1,11 +1,15 @@
 #include "tenshinhan.h"
 #include <QPixmap>
+#include <QTimer>
 
 Tenshinhan::Tenshinhan(QObject *parent)
     : QObject(parent), vida(300), hud(nullptr)
 {
-    QPixmap sprite(":/sprites/tenshinhan.png");
-    setPixmap(sprite.scaled(80, 80));
+    spriteIdle = QPixmap(":/sprites/tenshinhan_idle.png");
+    spriteAntesAtaque = QPixmap(":/sprites/tenshinhan_antes.png");
+    spriteAtaque = QPixmap(":/sprites/tenshinhan_atacando.png");
+
+    setPixmap(spriteIdle.scaled(80, 80));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 
     // Ubicar a Tenshinhan al mismo nivel que Goku
@@ -16,6 +20,17 @@ Tenshinhan::Tenshinhan(QObject *parent)
     hud = new HUD(80, Qt::red);
     hud->setZValue(10);
     hud->actualizar(vida);
+}
+
+void Tenshinhan::animarAtaque()
+{
+    setPixmap(spriteAntesAtaque.scaled(80, 80));
+    QTimer::singleShot(150, [this]() {
+        setPixmap(spriteAtaque.scaled(80, 80));
+    });
+    QTimer::singleShot(300, [this]() {
+        setPixmap(spriteIdle.scaled(80, 80));
+    });
 }
 
 void Tenshinhan::recibirDanio(int cantidad)

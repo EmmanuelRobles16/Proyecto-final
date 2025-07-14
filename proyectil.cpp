@@ -6,7 +6,7 @@ Proyectil::Proyectil(Goku *objetivo, QObject *parent)
     : QObject(parent), goku(objetivo), velocidadX(-15.0)
 {
     QPixmap sprite(":/sprites/rayo.png");
-    setPixmap(sprite.scaled(40, 40));
+    setPixmap(sprite.scaled(20, 20));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 
     connect(&timerMovimiento, &QTimer::timeout, this, &Proyectil::mover);
