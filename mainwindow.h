@@ -12,6 +12,7 @@
 #include "plataforma.h"
 #include "metafinal.h"
 #include "esferadragon.h"
+#include "dialogoretro.h"
 #include <QVector>
 #include <QtMultimedia/QMediaPlayer>
 #include <QtMultimedia/QAudioOutput>
@@ -28,6 +29,8 @@ class MainWindow : public QMainWindow {
         ~MainWindow();
 
     void iniciarNivel(int numero);
+signals:
+        void nivelCompletado();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -56,6 +59,9 @@ private:
     HUD *hud = nullptr;
     QMediaPlayer *musicaFondo = nullptr;
     QAudioOutput *audioOutput = nullptr;
+    int nivelActual = 0;
+    QVector<int> carriles;
+    int indiceCarril = 0;
 };
 
 #endif // MAINWINDOW_H

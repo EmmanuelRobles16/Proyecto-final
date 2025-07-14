@@ -7,10 +7,12 @@
       <file alias="goku_walk3.png">sprites/goku_walk3.png</file>
       <file alias="goku_planeando.png">sprites/goku_planeando.png</file>
     <file alias="fondo_nivel_1.png">sprites/fondo_nivel_1.png</file>
+        <file alias="fondo_nivel_2.png">sprites/sprites fondo.png</file>
     <file alias="enemigo_volador.png">sprites/enemigo_volador.png</file>
     <file alias="plataforma.png">sprites/plataforma.png</file>
     <file alias="esfera.png">sprites/esfera.png</file>  
     <file alias="krilin.png">sprites/krilin.png</file>
+    <file alias="fondo_menu.png">sprites/fondo_menu.png</file>
       </qresource>
       <qresource prefix="/audio">
         <file alias="musica_nivel1.wav">audio/musica_nivel1.wav</file>

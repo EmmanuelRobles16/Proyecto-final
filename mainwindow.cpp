@@ -71,8 +71,11 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 void MainWindow::iniciarNivel(int numero) {
-    // Escena más ancha que la vista para permitir scroll horizontal
-    escena = new QGraphicsScene(0, 0, 2400, 600, this);
+    nivelActual = numero;
+    carriles = {500, 350, 200, 50};
+    indiceCarril = 0;
+    int anchoEscena = (numero == 1) ? 2400 : 800;
+    escena = new QGraphicsScene(0, 0, anchoEscena, 600, this);
     ui->graphicsView->setScene(escena);
 
     if (!musicaFondo) {
@@ -94,66 +97,97 @@ void MainWindow::iniciarNivel(int numero) {
         p.drawTiledPixmap(QRectF(0, 0, escena->width(), escena->height()), fondoBase);
         p.end();
         QGraphicsPixmapItem *fondoItem = escena->addPixmap(fondoTile);
-        fondoItem->setZValue(-1); // detrás de todo
+        fondoItem->setZValue(-1);
         fondoItem->setPos(0, 0);
+    } else if (numero == 2) {
+        QPixmap fondoBase(":/sprites/fondo_nivel_2.png");
+        QGraphicsPixmapItem *fondoItem = escena->addPixmap(fondoBase.scaled(escena->width(), escena->height()));
+        fondoItem->setZValue(-1);
+        fondoItem->setPos(0, 0);
+        for (int y : carriles) {
+            escena->addLine(0, y, escena->width(), y, QPen(Qt::white));
+        }
     }
     // Agregar a Goku en la escena
     goku = new Goku();
-    goku->setPos(100, 500);
+    goku->setPos(100, carriles[indiceCarril]);
     escena->addItem(goku);
     actualizarCamara();
 
-    // Crear plataformas iniciales
-    Plataforma *p1 = new Plataforma(300, 500, 100, 20);
-    escena->addItem(p1);
-    Plataformas.append(p1);
-    Plataforma *p2 = new Plataforma(600, 320, 120, 20);
-    escena->addItem(p2);
-    Plataformas.append(p2);
+    if (numero == 1) {
+        // Crear plataformas iniciales
+        Plataforma *p1 = new Plataforma(300, 500, 100, 20);
+        escena->addItem(p1);
+        Plataformas.append(p1);
+        Plataforma *p2 = new Plataforma(600, 320, 120, 20);
+        escena->addItem(p2);
+        Plataformas.append(p2);
 
-    // Agregar plataformas adicionales
-    Plataforma *p3 = new Plataforma(900, 200, 100, 20);
-    escena->addItem(p3);
-    Plataformas.append(p3);
+        // Agregar plataformas adicionales
+        Plataforma *p3 = new Plataforma(900, 200, 100, 20);
+        escena->addItem(p3);
+        Plataformas.append(p3);
 
-    Plataforma *p4 = new Plataforma(1100, 400, 100, 20);
-    escena->addItem(p4);
-    Plataformas.append(p4);
+        Plataforma *p4 = new Plataforma(1100, 400, 100, 20);
+        escena->addItem(p4);
+        Plataformas.append(p4);
 
-    Plataforma *p5 = new Plataforma(1300, 200, 100, 20);
-    escena->addItem(p5);
-    Plataformas.append(p5);
+        Plataforma *p5 = new Plataforma(1300, 200, 100, 20);
+        escena->addItem(p5);
+        Plataformas.append(p5);
 
-    // Nuevas plataformas para el tramo extendido
-    Plataforma *p6 = new Plataforma(1500, 450, 100, 20);
-    escena->addItem(p6);
-    Plataformas.append(p6);
+        // Nuevas plataformas para el tramo extendido
+        Plataforma *p6 = new Plataforma(1500, 450, 100, 20);
+        escena->addItem(p6);
+        Plataformas.append(p6);
 
-    Plataforma *p7 = new Plataforma(1700, 350, 120, 20);
-    escena->addItem(p7);
-    Plataformas.append(p7);
+        Plataforma *p7 = new Plataforma(1700, 350, 120, 20);
+        escena->addItem(p7);
+        Plataformas.append(p7);
 
-    Plataforma *p8 = new Plataforma(1900, 250, 100, 20);
-    escena->addItem(p8);
-    Plataformas.append(p8);
+        Plataforma *p8 = new Plataforma(1900, 250, 100, 20);
+        escena->addItem(p8);
+        Plataformas.append(p8);
 
-    Plataforma *p9 = new Plataforma(2100, 180, 100, 20);
-    escena->addItem(p9);
-    Plataformas.append(p9);
+        Plataforma *p9 = new Plataforma(2100, 180, 100, 20);
+        escena->addItem(p9);
+        Plataformas.append(p9);
 
-    // Esfera del Dragon
-    esfera = new EsferaDragon();
-    esfera->setPos(1800, 300);
-    escena->addItem(esfera);
+        // Esfera del Dragon
+        esfera = new EsferaDragon();
+        esfera->setPos(1800, 300);
+        escena->addItem(esfera);
 
-    // Meta del nivel
-    metaFinal = new MetaFinal();
-    metaFinal->setPos(2350, 150);
-    escena->addItem(metaFinal);
+        // Meta del nivel
+        metaFinal = new MetaFinal();
+        metaFinal->setPos(2350, 150);
+        escena->addItem(metaFinal);
+
+        // Timer para movimiento de enemigos
+        if (!timerEnemigos) {
+            timerEnemigos = new QTimer(this);
+            connect(timerEnemigos, &QTimer::timeout, this, &MainWindow::actualizarEnemigos);
+        }
+        timerEnemigos->start(30);
+
+        // Timer para creacion de enemigos
+        if (!timerGeneradorEnemigos) {
+            timerGeneradorEnemigos = new QTimer(this);
+            connect(timerGeneradorEnemigos, &QTimer::timeout, this, &MainWindow::crearEnemigo);
+        }
+        timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
+
+        // Timer para verificar colisiones
+        if (!timerColisiones) {
+            timerColisiones = new QTimer(this);
+            connect(timerColisiones, &QTimer::timeout, this, &MainWindow::verificarColisiones);
+        }
+        timerColisiones->start(30);
+    }
 
     // Crear HUD de vida
     hud = new HUD();
-    hud->setZValue(10); // por encima de otros elementos
+    hud->setZValue(10);
     hud->setPos(10, 30);
     escena->addItem(hud);
     connect(goku, &Goku::vidaActualizada, hud, &HUD::actualizar);
@@ -161,34 +195,14 @@ void MainWindow::iniciarNivel(int numero) {
 
     // Timer principal del juego (física y cámara)
     if (!timer) {
-            timer = new QTimer(this);
+        timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, &MainWindow::actualizarJuego);
     }
-        timer->start(30);
-
-    // Timer para movimiento de enemigos
-    if (!timerEnemigos) {
-        timerEnemigos = new QTimer(this);
-        connect(timerEnemigos, &QTimer::timeout, this, &MainWindow::actualizarEnemigos);
-    }
-    timerEnemigos->start(30);
-
-    // Timer para creacion de enemigos
-    if (!timerGeneradorEnemigos) {
-        timerGeneradorEnemigos = new QTimer(this);
-        connect(timerGeneradorEnemigos, &QTimer::timeout, this, &MainWindow::crearEnemigo);
-    }
-    timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
-
-    // Timer para verificar colisiones
-    if (!timerColisiones) {
-        timerColisiones = new QTimer(this);
-        connect(timerColisiones, &QTimer::timeout, this, &MainWindow::verificarColisiones);
-    }
-    timerColisiones->start(30);
+    timer->start(30);
 
     this->setFocus();
 }
+
 
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -198,7 +212,26 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    switch (event->key()) {
+    if (nivelActual == 2) {
+        switch (event->key()) {
+        case Qt::Key_W:
+            if (indiceCarril < carriles.size() - 1) {
+                indiceCarril++;
+                goku->setPos(100, carriles[indiceCarril]);
+            }
+            break;
+        case Qt::Key_S:
+            if (indiceCarril > 0) {
+                indiceCarril--;
+                goku->setPos(100, carriles[indiceCarril]);
+            }
+            break;
+        default:
+            QMainWindow::keyPressEvent(event);
+            break;
+        }
+    } else {
+        switch (event->key()) {
         case Qt::Key_Left:
             goku->moverIzquierda();
             break;
@@ -209,11 +242,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             goku->saltar();
             goku->activarPlaneo();
             break;
-    default:
-        QMainWindow::keyPressEvent(event);
-        break;
+        default:
+            QMainWindow::keyPressEvent(event);
+            break;
+        }
     }
 }
+
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
@@ -222,17 +257,21 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
 
-    switch (event->key()) {
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-        goku->detenerAnimacionCaminar();
-        break;
-    case Qt::Key_Space:
-        goku->desactivarPlaneo();
-        break;
-    default:
+    if (nivelActual == 1) {
+        switch (event->key()) {
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+            goku->detenerAnimacionCaminar();
+            break;
+        case Qt::Key_Space:
+            goku->desactivarPlaneo();
+            break;
+        default:
+            QMainWindow::keyReleaseEvent(event);
+            break;
+        }
+    } else {
         QMainWindow::keyReleaseEvent(event);
-        break;
     }
 }
 void MainWindow::actualizarEnemigos()
@@ -317,7 +356,8 @@ void MainWindow::verificarColisiones()
 void MainWindow::actualizarJuego()
 {
     if (!goku) return;
-    goku->actualizarFisica();
+    if (nivelActual == 1)
+        goku->actualizarFisica();
     actualizarCamara();
 }
 
