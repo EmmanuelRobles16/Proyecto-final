@@ -6,7 +6,7 @@
 #include <QtMultimedia/QSoundEffect>
 #include <QtGlobal>
 Goku::Goku(QObject *parent)
-    : QObject(parent)
+    : Personaje(100, parent)
 {
     spriteIdle = QPixmap(":/sprites/goku_idle.png");
     spritePlaneo = QPixmap(":/sprites/goku_planeando.png");
@@ -38,7 +38,6 @@ Goku::Goku(QObject *parent)
     estaPlaneando = false;
     framesPlaneo = 0;
     maxFramesPlaneo = 60;
-    vida = 100;
 
     actualizarHUD();
 }
@@ -100,20 +99,12 @@ void Goku::desactivarPlaneo()
 }
 void Goku::recibirDanio(int cantidad)
 {
-    int vidaAnterior = vida;
-    vida -= cantidad;
-    if (vida < 0) {
-        vida = 0;
-    }
     sonidoGolpe.play();
-    actualizarHUD();
-    if (vidaAnterior > 0 && vida == 0)
-        emit derrotado();
+    Personaje::recibirDanio(cantidad);
 }
 void Goku::curarCompleto()
 {
-    vida = 100;
-    actualizarHUD();
+    Personaje::curarCompleto();
 }
 void Goku::actualizarHUD()
 {

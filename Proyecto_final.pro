@@ -9,39 +9,29 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    camara.cpp \
+    dialogoretro.cpp \
     enemigovolador.cpp \
-    entidad.cpp \
     esferadragon.cpp \
-    fisica.cpp \
     goku.cpp \
     hud.cpp \
-    item.cpp \
-    juego.cpp \
     main.cpp \
     mainwindow.cpp \
     menu.cpp \
     metafinal.cpp \
-    nivel.cpp \
     personaje.cpp \
     plataforma.cpp \
     proyectil.cpp \
     tenshinhan.cpp
 
 HEADERS += \
-    camara.h \
+    dialogoretro.h \
     enemigovolador.h \
-    entidad.h \
     esferadragon.h \
-    fisica.h \
     goku.h \
     hud.h \
-    item.h \
-    juego.h \
     mainwindow.h \
     menu.h \
     metafinal.h \
-    nivel.h \
     personaje.h \
     plataforma.h \
     proyectil.h \

@@ -3,7 +3,7 @@
 #include <QTimer>
 
 Tenshinhan::Tenshinhan(QObject *parent)
-    : QObject(parent), vida(300), hud(nullptr)
+    : Personaje(300, parent), hud(nullptr)
 {
     spriteIdle = QPixmap(":/sprites/tenshinhan_idle.png");
     spriteAntesAtaque = QPixmap(":/sprites/tenshinhan_antes.png");
@@ -35,13 +35,7 @@ void Tenshinhan::animarAtaque()
 
 void Tenshinhan::recibirDanio(int cantidad)
 {
-    int vidaAnterior = vida;
-    vida -= cantidad;
-    if (vida < 0)
-        vida = 0;
-    emit vidaActualizada(vida);
+    Personaje::recibirDanio(cantidad);
     if (hud)
         hud->actualizar(vida);
-    if (vidaAnterior > 0 && vida == 0)
-        emit derrotado();
 }

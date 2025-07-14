@@ -7,19 +7,15 @@
 #include <QVector>
 #include <QTimer>
 #include <QtMultimedia/QSoundEffect>
+#include "personaje.h"
 
-class Goku : public QObject, public QGraphicsPixmapItem
+class Goku : public Personaje
 {
     Q_OBJECT
 public:
     explicit Goku(QObject *parent = nullptr);
-
-    int getVida() const { return vida; }
-
 signals:
-    void vidaActualizada(int nuevaVida);
     void ataqueLanzado();
-        void derrotado();
 
 public slots:
     void recibirDanio(int cantidad);
@@ -50,7 +46,6 @@ private:
     bool estaPlaneando;
     int framesPlaneo;
     int maxFramesPlaneo;
-    int vida;
 
     QVector<QPixmap> spritesCaminar;
     QPixmap spriteIdle;
