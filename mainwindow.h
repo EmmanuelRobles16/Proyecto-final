@@ -11,6 +11,7 @@
 #include "hud.h"
 #include "plataforma.h"
 #include "tenshinhan.h"
+#include "proyectil.h"
 #include "metafinal.h"
 #include "esferadragon.h"
 #include "dialogoretro.h"
@@ -36,14 +37,13 @@ signals:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-
 private slots:
     void actualizarEnemigos();
     void crearEnemigo();
     void verificarColisiones();
     void actualizarJuego();
     void actualizarCamara();
-
+    void lanzarProyectiles();
 private:
     void limitarX(QGraphicsItem *item, qreal minX, qreal maxX);
     Ui::MainWindow *ui;
@@ -58,6 +58,7 @@ private:
     QTimer *timerEnemigos = nullptr;
     QTimer *timerGeneradorEnemigos = nullptr;
     QTimer *timerColisiones = nullptr;
+    QTimer *timerAtaqueTenshinhan = nullptr;
     HUD *hud = nullptr;
     HUD *hudTenshinhan = nullptr;
     QMediaPlayer *musicaFondo = nullptr;
@@ -65,6 +66,8 @@ private:
     int nivelActual = 0;
     QVector<int> carriles;
     int indiceCarril = 0;
+    bool patronAlterno = false;
+    QVector<Proyectil*> proyectiles;
 };
 
 #endif // MAINWINDOW_H

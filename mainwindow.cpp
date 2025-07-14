@@ -5,6 +5,7 @@
 #include "dialogoretro.h"
 #include "hud.h"
 #include "plataforma.h"
+#include "proyectil.h"
 #include "metafinal.h"
 #include "esferadragon.h"
 #include <QRandomGenerator>
@@ -39,6 +40,9 @@ MainWindow::~MainWindow() {
     }
     if (timerColisiones) {
         timerColisiones->stop();
+    }
+    if (timerAtaqueTenshinhan) {
+        timerAtaqueTenshinhan->stop();
     }
     for (EnemigoVolador* e : enemigos) {
         escena->removeItem(e);
@@ -77,6 +81,11 @@ MainWindow::~MainWindow() {
         delete audioOutput;
         audioOutput = nullptr;
     }
+    for (Proyectil* p : proyectiles) {
+        escena->removeItem(p);
+        delete p;
+    }
+    proyectiles.clear();
     delete hud;
     delete ui;
 }
@@ -207,6 +216,12 @@ void MainWindow::iniciarNivel(int numero) {
         hudTenshinhan->actualizar(tenshinhan->getVida());
         int xHud = ui->graphicsView->viewport()->width() - hudTenshinhan->rect().width() - 10;
         hudTenshinhan->setPos(ui->graphicsView->mapToScene(QPoint(xHud, 30)));
+
+        if (!timerAtaqueTenshinhan) {
+            timerAtaqueTenshinhan = new QTimer(this);
+            connect(timerAtaqueTenshinhan, &QTimer::timeout, this, &MainWindow::lanzarProyectiles);
+        }
+        timerAtaqueTenshinhan->start(4000);
 
         if (!timerColisiones) {
             timerColisiones = new QTimer(this);
@@ -361,6 +376,28 @@ void MainWindow::verificarColisiones()
                 return;
             }
         }
+        if (Proyectil* p = dynamic_cast<Proyectil*>(item)) {
+            goku->recibirDanio(10);
+            escena->removeItem(p);
+            proyectiles.removeOne(p);
+            delete p;
+            if (goku->getVida() <= 0) {
+                QMessageBox::information(this, "Fin del juego", "Goku ha sido derrotado");
+                close();
+                return;
+            }
+        }
+            if (Proyectil* p = dynamic_cast<Proyectil*>(item)) {
+                goku->recibirDanio(10);
+                escena->removeItem(p);
+                proyectiles.removeOne(p);
+                delete p;
+                if (goku->getVida() <= 0) {
+                    QMessageBox::information(this, "Fin del juego", "Goku ha sido derrotado");
+                    close();
+                    return;
+                }
+            }
         if (EsferaDragon* esf = dynamic_cast<EsferaDragon*>(item)) {
             goku->curarCompleto();
             escena->removeItem(esf);
@@ -396,8 +433,7 @@ void MainWindow::actualizarJuego()
     actualizarCamara();
 }
 
-void MainWindow::actualizarCamara()
-{
+void MainWindow::actualizarCamara(){
     if (!goku || !escena) return;
 
     QGraphicsView *view = ui->graphicsView;
@@ -441,3 +477,26 @@ void MainWindow::limitarX(QGraphicsItem *item, qreal minX, qreal maxX)
         x = maxX;
     item->setX(x);
 }
+
+void MainWindow::lanzarProyectiles()
+{
+    if (!tenshinhan) return;
+
+    QVector<int> indices;
+    if (patronAlterno) {
+        indices << 1 << 2; // carriles 3 y 2
+    } else {
+        indices << 3 << 0; // carriles 1 y 4
+    }
+    patronAlterno = !patronAlterno;
+
+    for (int idx : indices) {
+        if (idx >= 0 && idx < carriles.size()) {
+            Proyectil *p = new Proyectil(goku);
+            p->setPos(tenshinhan->x(), carriles[idx]);
+            escena->addItem(p);
+            proyectiles.append(p);
+        }
+    }
+}
+
