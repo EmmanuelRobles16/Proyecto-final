@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>menu</class>
+ <class>Menu</class>
  <widget class="QWidget" name="menu">
   <property name="geometry">
    <rect>
@@ -44,6 +44,10 @@
      <height>81</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent;
+border: none;</string>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -51,7 +55,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnNivel1_2">
+  <widget class="QPushButton" name="btnNivel2">
    <property name="geometry">
     <rect>
      <x>240</x>
@@ -59,6 +63,10 @@
      <width>651</width>
      <height>81</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent;
+border: none;</string>
    </property>
    <property name="text">
     <string/>
