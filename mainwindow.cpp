@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "goku.h"
 #include "enemigovolador.h"
+#include "dialogoretro.h"
 #include "hud.h"
 #include "plataforma.h"
 #include "metafinal.h"
@@ -251,19 +252,20 @@ void MainWindow::actualizarEnemigos()
 
 void MainWindow::crearEnemigo()
 {
-        EnemigoVolador *enemigo = new EnemigoVolador();
-    // Generar de 4 a 5 enemigos para incrementar la dificultad
-    int cantidad = QRandomGenerator::global()->bounded(2, 5); // 4 o 5 enemigos
+    // Generar de 2 a 4 enemigos
+    int cantidad = QRandomGenerator::global()->bounded(2, 5);
 
-    // Valor base aleatorio para distribuirlos verticalmente
-    float baseY = QRandomGenerator::global()->bounded(50, 551 - cantidad * 70);
+    qreal altoEscena = escena->height();
+    qreal mitad = altoEscena / 2.0;
+    qreal centroArriba = mitad / 2.0;
+    qreal centroAbajo = mitad + centroArriba;
+
     for (int i = 0; i < cantidad; ++i) {
         EnemigoVolador *enemigo = new EnemigoVolador();
 
-        // Separar mas los enemigos en el eje Y
-        float yPos = baseY + i * 70;
+        qreal yPos = (i % 2 == 0) ? centroAbajo : centroArriba;
 
-        enemigo->setPos(2100 + i * 40, yPos); // ligero desplazamiento horizontal
+        enemigo->setPos(2100 + i * 40, yPos);
         enemigo->establecerYInicial(yPos);
         escena->addItem(enemigo);
         enemigos.append(enemigo);
@@ -296,7 +298,15 @@ void MainWindow::verificarColisiones()
             delete esf;
         }
         if (MetaFinal* meta = dynamic_cast<MetaFinal*>(item)) {
-            QMessageBox::information(this, "Nivel completado", "\xC2\xA1Nivel completado!");
+            if (timer) timer->stop();
+            if (timerEnemigos) timerEnemigos->stop();
+            if (timerGeneradorEnemigos) timerGeneradorEnemigos->stop();
+            if (timerColisiones) timerColisiones->stop();
+
+            DialogoRetro dialog(this);
+            dialog.exec();
+
+            emit nivelCompletado();
             close();
             return;
         }

@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QtMultimedia/QSoundEffect>
+#include <QtGlobal>
 Goku::Goku(QObject *parent)
     : QObject(parent)
 {
@@ -44,9 +45,9 @@ void Goku::moverIzquierda()
         velocidadX = -5.0f;
     } else {
         qreal nuevaX = x() - 5;
-        if (nuevaX < 0)
-            nuevaX = 0;
-        setX(nuevaX);
+        qreal minX = 0;
+        qreal maxX = scene() ? scene()->width() - boundingRect().width() : 800 - boundingRect().width();
+        setX(qBound(minX, nuevaX, maxX));
     }
     iniciarAnimacionCaminar();
 }
@@ -56,15 +57,13 @@ void Goku::moverDerecha()
     if (enElAire) {
         velocidadX = 5.0f;
     } else {
-        qreal limite = scene() ? scene()->width() - boundingRect().width() : x() + 5;
         qreal nuevaX = x() + 5;
-        if (scene() && nuevaX > limite)
-            nuevaX = limite;
-        setX(nuevaX);
+        qreal minX = 0;
+        qreal maxX = scene() ? scene()->width() - boundingRect().width() : 800 - boundingRect().width();
+        setX(qBound(minX, nuevaX, maxX));
     }
     iniciarAnimacionCaminar();
 }
-
 void Goku::saltar()
 {
     if (!enElAire) {
@@ -130,15 +129,6 @@ void Goku::actualizarFisica()
     // Actualizar posicion con velocidades actuales
     setPos(x() + velocidadX, y() + velocidadY);
 
-    // Limitar movimiento horizontal al ancho de la escena
-    if (scene()) {
-        qreal maxX = scene()->width() - boundingRect().width();
-        if (x() < 0)
-            setX(0);
-        else if (x() > maxX)
-            setX(maxX);
-    }
-
     bool aterrizo = false;
     QList<QGraphicsItem*> items = collidingItems();
     for (QGraphicsItem* it : items) {
@@ -168,7 +158,20 @@ void Goku::actualizarFisica()
     } else if (!aterrizo) {
         enElAire = true;
     }
+
+    // Mantener a Goku dentro de los limites de la escena
+    if (scene()) {
+        qreal maxX = scene()->width() - boundingRect().width();
+        qreal maxSceneY = scene()->height() - boundingRect().height();
+        qreal maxY = qMin(maxSceneY, 500.0);
+        qreal boundedX = qBound(0.0, x(), maxX);
+        qreal boundedY = qBound(0.0, y(), maxY);
+        if (boundedY <= 0.0 && velocidadY < 0)
+            velocidadY = 0.0f;
+        setPos(boundedX, boundedY);
+    }
 }
+
 
 void Goku::iniciarAnimacionCaminar()
 {
