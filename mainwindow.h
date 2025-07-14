@@ -59,6 +59,7 @@ private:
     QTimer *timerGeneradorEnemigos = nullptr;
     QTimer *timerColisiones = nullptr;
     HUD *hud = nullptr;
+    HUD *hudTenshinhan = nullptr;
     QMediaPlayer *musicaFondo = nullptr;
     QAudioOutput *audioOutput = nullptr;
     int nivelActual = 0;

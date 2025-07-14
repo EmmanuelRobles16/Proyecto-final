@@ -8,11 +8,13 @@ Tenshinhan::Tenshinhan(QObject *parent)
     setPixmap(sprite.scaled(80, 80));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 
-    setPos(760, 200); // fixed position on the right edge
+    // Ubicar a Tenshinhan al mismo nivel que Goku
+    setPos(650, 450);
 
-    hud = new HUD(600, Qt::red, this);
-    hud->setZValue(1);
-    hud->setPos(boundingRect().width()/2 - hud->rect().width()/2, -25);
+    // HUD más pequeño centrado sobre el personaje
+    // HUD pequeño (no dependiente del personaje)
+    hud = new HUD(80, Qt::red);
+    hud->setZValue(10);
     hud->actualizar(vida);
 }
 

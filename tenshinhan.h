@@ -12,6 +12,7 @@ public:
     explicit Tenshinhan(QObject *parent = nullptr);
 
     int getVida() const { return vida; }
+    HUD* getHUD() const { return hud; }
 
 signals:
     void vidaActualizada(int nuevaVida);

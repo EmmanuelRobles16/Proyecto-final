@@ -65,6 +65,11 @@ MainWindow::~MainWindow() {
         delete tenshinhan;
         tenshinhan = nullptr;
     }
+    if (hudTenshinhan) {
+        escena->removeItem(hudTenshinhan);
+        delete hudTenshinhan;
+        hudTenshinhan = nullptr;
+    }
     if (musicaFondo) {
         musicaFondo->stop();
         delete musicaFondo;
@@ -194,12 +199,22 @@ void MainWindow::iniciarNivel(int numero) {
         escena->addItem(tenshinhan);
         tenshinhan->setZValue(1);
 
+        // HUD de Tenshinhan
+        hudTenshinhan = new HUD(80, Qt::red);
+        hudTenshinhan->setZValue(10);
+        escena->addItem(hudTenshinhan);
+        connect(tenshinhan, &Tenshinhan::vidaActualizada, hudTenshinhan, &HUD::actualizar);
+        hudTenshinhan->actualizar(tenshinhan->getVida());
+        int xHud = ui->graphicsView->viewport()->width() - hudTenshinhan->rect().width() - 10;
+        hudTenshinhan->setPos(ui->graphicsView->mapToScene(QPoint(xHud, 30)));
+
         if (!timerColisiones) {
             timerColisiones = new QTimer(this);
             connect(timerColisiones, &QTimer::timeout, this, &MainWindow::verificarColisiones);
         }
         timerColisiones->start(30);
     }
+
 
     // Crear HUD de vida
     hud = new HUD();
@@ -411,8 +426,11 @@ void MainWindow::actualizarCamara()
     if (hud) {
         hud->setPos(view->mapToScene(QPoint(10, 30)));
     }
+    if (hudTenshinhan) {
+        int xHud = view->viewport()->width() - hudTenshinhan->rect().width() - 120;
+        hudTenshinhan->setPos(view->mapToScene(QPoint(xHud, 30)));
+    }
 }
-
 void MainWindow::limitarX(QGraphicsItem *item, qreal minX, qreal maxX)
 {
     if (!item) return;
