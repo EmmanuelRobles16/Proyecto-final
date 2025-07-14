@@ -86,6 +86,7 @@ MainWindow::~MainWindow() {
         delete p;
     }
     proyectiles.clear();
+    proyectilGoku = nullptr;
     delete hud;
     delete ui;
 }
@@ -132,6 +133,19 @@ void MainWindow::iniciarNivel(int numero) {
     goku = new Goku();
     goku->setPos(100, carriles[indiceCarril]);
     escena->addItem(goku);
+    connect(goku, &Goku::ataqueLanzado, this, [this]() {
+        if (proyectilGoku)
+            return;
+        proyectilGoku = new Proyectil(Proyectil::DeGoku);
+        proyectilGoku->setPos(goku->x() + goku->boundingRect().width(), goku->y() + goku->boundingRect().height()/2);
+        escena->addItem(proyectilGoku);
+        proyectiles.append(proyectilGoku);
+        connect(proyectilGoku, &Proyectil::eliminado, this, [this](Proyectil* p){
+            proyectiles.removeOne(p);
+            if (proyectilGoku == p)
+                proyectilGoku = nullptr;
+        });
+    });
     actualizarCamara();
 
     if (numero == 1) {
@@ -285,8 +299,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             goku->moverDerecha();
             break;
         case Qt::Key_Space:
-            goku->saltar();
-            goku->activarPlaneo();
+            goku->atacar();
             break;
         default:
             QMainWindow::keyPressEvent(event);
@@ -308,9 +321,6 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         case Qt::Key_Left:
         case Qt::Key_Right:
             goku->detenerAnimacionCaminar();
-            break;
-        case Qt::Key_Space:
-            goku->desactivarPlaneo();
             break;
         default:
             QMainWindow::keyReleaseEvent(event);
@@ -377,17 +387,7 @@ void MainWindow::verificarColisiones()
             }
         }
         if (Proyectil* p = dynamic_cast<Proyectil*>(item)) {
-            goku->recibirDanio(10);
-            escena->removeItem(p);
-            proyectiles.removeOne(p);
-            delete p;
-            if (goku->getVida() <= 0) {
-                QMessageBox::information(this, "Fin del juego", "Goku ha sido derrotado");
-                close();
-                return;
-            }
-        }
-            if (Proyectil* p = dynamic_cast<Proyectil*>(item)) {
+            if (!p->esDeGoku()) {
                 goku->recibirDanio(10);
                 escena->removeItem(p);
                 proyectiles.removeOne(p);
@@ -398,6 +398,7 @@ void MainWindow::verificarColisiones()
                     return;
                 }
             }
+        }
         if (EsferaDragon* esf = dynamic_cast<EsferaDragon*>(item)) {
             goku->curarCompleto();
             escena->removeItem(esf);
@@ -420,6 +421,31 @@ void MainWindow::verificarColisiones()
         if (Tenshinhan* jefe = dynamic_cast<Tenshinhan*>(item)) {
             QMessageBox::information(this, "Batalla", "\u00a1Tenshinhan aparece!");
             // Aquí podría iniciar una batalla real
+        }
+    }
+
+    if (proyectilGoku) {
+        QList<QGraphicsItem*> colP = proyectilGoku->collidingItems();
+        for (QGraphicsItem* obj : colP) {
+            EnemigoVolador* enemigo = dynamic_cast<EnemigoVolador*>(obj);
+            if (enemigo) {
+                escena->removeItem(enemigo);
+                enemigos.removeOne(enemigo);
+                delete enemigo;
+                escena->removeItem(proyectilGoku);
+                proyectiles.removeOne(proyectilGoku);
+                delete proyectilGoku;
+                proyectilGoku = nullptr;
+                break;
+            }
+            if (tenshinhan && obj == tenshinhan) {
+                tenshinhan->recibirDanio(10);
+                escena->removeItem(proyectilGoku);
+                proyectiles.removeOne(proyectilGoku);
+                delete proyectilGoku;
+                proyectilGoku = nullptr;
+                break;
+            }
         }
     }
 }
@@ -490,14 +516,12 @@ void MainWindow::lanzarProyectiles()
         indices << 3 << 0; // carriles 1 y 4
     }
     patronAlterno = !patronAlterno;
-
     for (int idx : indices) {
-        if (idx >= 0 && idx < carriles.size()) {
-            Proyectil *p = new Proyectil(goku);
+            if (idx >= 0 && idx < carriles.size()) {
+                Proyectil *p = new Proyectil(Proyectil::DeEnemigo, goku);
             p->setPos(tenshinhan->x(), carriles[idx]);
-            escena->addItem(p);
-            proyectiles.append(p);
+                escena->addItem(p);
+                proyectiles.append(p);
         }
     }
 }
-

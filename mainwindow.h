@@ -68,6 +68,8 @@ private:
     int indiceCarril = 0;
     bool patronAlterno = false;
     QVector<Proyectil*> proyectiles;
+    Proyectil *proyectilGoku = nullptr;
 };
+
 
 #endif // MAINWINDOW_H

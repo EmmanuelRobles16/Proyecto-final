@@ -2,10 +2,12 @@
 #include "goku.h"
 #include <QGraphicsScene>
 
-Proyectil::Proyectil(Goku *objetivo, QObject *parent)
-    : QObject(parent), goku(objetivo), velocidadX(-15.0)
+Proyectil::Proyectil(Tipo t, Goku *objetivo, QObject *parent)
+    : QObject(parent), tipo(t), goku(objetivo)
 {
-    QPixmap sprite(":/sprites/rayo.png");
+    velocidadX = (tipo == DeGoku) ? 15.0 : -15.0;
+
+    QPixmap sprite(tipo == DeGoku ? ":/sprites/ataque_goku.png" : ":/sprites/rayo.png");
     setPixmap(sprite.scaled(20, 20));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
 
@@ -17,21 +19,27 @@ void Proyectil::mover()
 {
     setX(x() + velocidadX);
 
-    if (scene() && x() + boundingRect().width() < 0) {
-        scene()->removeItem(this);
-        deleteLater();
-        return;
-    }
-
-    QList<QGraphicsItem*> colisiones = collidingItems();
-    for (QGraphicsItem* item : colisiones) {
-        Goku* g = dynamic_cast<Goku*>(item);
-        if (g && goku == g) {
-            goku->recibirDanio(10);
-            if (scene())
-                scene()->removeItem(this);
+    if (scene()) {
+        if (x() + boundingRect().width() < 0 || x() > scene()->width()) {
+            emit eliminado(this);
+            scene()->removeItem(this);
             deleteLater();
             return;
+        }
+    }
+
+    if (tipo == DeEnemigo) {
+        QList<QGraphicsItem*> colisiones = collidingItems();
+        for (QGraphicsItem* item : colisiones) {
+            Goku* g = dynamic_cast<Goku*>(item);
+            if (g && goku == g) {
+                goku->recibirDanio(10);
+                emit eliminado(this);
+                if (scene())
+                    scene()->removeItem(this);
+                deleteLater();
+                return;
+            }
         }
     }
 }

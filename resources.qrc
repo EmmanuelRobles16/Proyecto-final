@@ -6,6 +6,9 @@
       <file alias="goku_walk2.png">sprites/goku_walk2.png</file>
       <file alias="goku_walk3.png">sprites/goku_walk3.png</file>
       <file alias="goku_planeando.png">sprites/goku_planeando.png</file>
+      <file alias="goku_antes_de_atacar.png">sprites/goku_antes_de_atacar.png</file>
+      <file alias="goku_atacando.png">sprites/goku_atacando.png</file>
+      <file alias="ataque_goku.png">sprites/ataque_goku.png</file>
     <file alias="fondo_nivel_1.png">sprites/fondo_nivel_1.png</file>
         <file alias="fondo_nivel_2.png">sprites/sprites fondo.png</file>
     <file alias="enemigo_volador.png">sprites/enemigo_volador.png</file>
