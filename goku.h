@@ -18,6 +18,8 @@ public:
 
 signals:
     void vidaActualizada(int nuevaVida);
+    void ataqueLanzado();
+        void derrotado();
 
 public slots:
     void recibirDanio(int cantidad);
@@ -30,7 +32,8 @@ public slots:
     void activarPlaneo();
     void desactivarPlaneo();
     void detenerAnimacionCaminar();
-    bool estaEnElAire() const { return enElAire; }
+    void atacar();
+    bool estaEnElAire() const { return enElAire;}
 
 private:
     void actualizarHUD();
@@ -52,6 +55,10 @@ private:
     QVector<QPixmap> spritesCaminar;
     QPixmap spriteIdle;
     QPixmap spritePlaneo;
+    QPixmap spriteAntesAtaque;
+    QPixmap spriteAtaque;
+
+    bool puedeAtacar;
 
     QTimer animacionTimer;
     int frameActual;

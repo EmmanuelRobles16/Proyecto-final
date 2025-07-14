@@ -17,6 +17,7 @@ public:
 
 signals:
     void vidaActualizada(int nuevaVida);
+    void derrotado();
 
 public slots:
     void recibirDanio(int cantidad);

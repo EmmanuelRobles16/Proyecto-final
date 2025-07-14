@@ -133,6 +133,10 @@ void MainWindow::iniciarNivel(int numero) {
     goku = new Goku();
     goku->setPos(100, carriles[indiceCarril]);
     escena->addItem(goku);
+    connect(goku, &Goku::derrotado, this, [this]() {
+        QMessageBox::information(this, "Fin del juego", "Goku ha sido derrotado");
+        close();
+    });
     connect(goku, &Goku::ataqueLanzado, this, [this]() {
         if (proyectilGoku)
             return;
@@ -221,6 +225,10 @@ void MainWindow::iniciarNivel(int numero) {
         tenshinhan = new Tenshinhan();
         escena->addItem(tenshinhan);
         tenshinhan->setZValue(1);
+        connect(tenshinhan, &Tenshinhan::derrotado, this, [this]() {
+            QMessageBox::information(this, "Victoria", "\u00a1Has derrotado a Tenshinhan!");
+            close();
+        });
 
         // HUD de Tenshinhan
         hudTenshinhan = new HUD(80, Qt::red);
@@ -286,6 +294,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 goku->setPos(100, carriles[indiceCarril]);
             }
             break;
+        case Qt::Key_Space:
+            goku->atacar();
+            break;
         default:
             QMainWindow::keyPressEvent(event);
             break;
@@ -300,6 +311,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             break;
         case Qt::Key_Space:
             goku->atacar();
+            break;
+        case Qt::Key_Up:
+            goku->saltar();
+            goku->activarPlaneo();
             break;
         default:
             QMainWindow::keyPressEvent(event);
@@ -321,6 +336,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         case Qt::Key_Left:
         case Qt::Key_Right:
             goku->detenerAnimacionCaminar();
+            break;
+        case Qt::Key_Up:
+            goku->desactivarPlaneo();
             break;
         default:
             QMainWindow::keyReleaseEvent(event);
@@ -439,11 +457,16 @@ void MainWindow::verificarColisiones()
                 break;
             }
             if (tenshinhan && obj == tenshinhan) {
-                tenshinhan->recibirDanio(10);
+                tenshinhan->recibirDanio(20);
                 escena->removeItem(proyectilGoku);
                 proyectiles.removeOne(proyectilGoku);
                 delete proyectilGoku;
                 proyectilGoku = nullptr;
+                if (tenshinhan->getVida() <= 0) {
+                    QMessageBox::information(this, "Victoria", "\u00a1Has derrotado a Tenshinhan!");
+                    close();
+                    return;
+                }
                 break;
             }
         }

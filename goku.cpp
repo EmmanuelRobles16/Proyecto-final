@@ -10,6 +10,8 @@ Goku::Goku(QObject *parent)
 {
     spriteIdle = QPixmap(":/sprites/goku_idle.png");
     spritePlaneo = QPixmap(":/sprites/goku_planeando.png");
+    spriteAntesAtaque = QPixmap(":/sprites/goku_antes_de_atacar.png");
+    spriteAtaque = QPixmap(":/sprites/goku_atacando.png");
     spritesCaminar.append(QPixmap(":/sprites/goku_walk1.png"));
     spritesCaminar.append(QPixmap(":/sprites/goku_walk2.png"));
     spritesCaminar.append(QPixmap(":/sprites/goku_walk3.png"));
@@ -21,6 +23,8 @@ Goku::Goku(QObject *parent)
     animacionTimer.setInterval(150);
     frameActual = 0;
     caminando = false;
+
+    puedeAtacar = true;
 
     sonidoGolpe.setSource(QUrl("qrc:/audio/golpe.wav"));
     sonidoGolpe.setVolume(0.8);
@@ -96,12 +100,15 @@ void Goku::desactivarPlaneo()
 }
 void Goku::recibirDanio(int cantidad)
 {
+    int vidaAnterior = vida;
     vida -= cantidad;
     if (vida < 0) {
         vida = 0;
     }
     sonidoGolpe.play();
     actualizarHUD();
+    if (vidaAnterior > 0 && vida == 0)
+        emit derrotado();
 }
 void Goku::curarCompleto()
 {
@@ -191,11 +198,32 @@ void Goku::detenerAnimacionCaminar()
             setPixmap(spriteIdle.scaled(60, 60));
     }
 }
-
 void Goku::actualizarFrameCaminar()
 {
     if (!caminando || spritesCaminar.isEmpty())
         return;
     frameActual = (frameActual + 1) % spritesCaminar.size();
     setPixmap(spritesCaminar[frameActual].scaled(60, 60));
+}
+
+void Goku::atacar()
+{
+    if (!puedeAtacar)
+        return;
+
+    puedeAtacar = false;
+    setPixmap(spriteAntesAtaque.scaled(60, 60));
+
+    QTimer::singleShot(100, [this]() {
+        setPixmap(spriteAtaque.scaled(60, 60));
+        emit ataqueLanzado();
+    });
+
+    QTimer::singleShot(250, [this]() {
+        setPixmap(spritesCaminar[0].scaled(60, 60));
+    });
+
+    QTimer::singleShot(400, [this]() {
+        puedeAtacar = true;
+    });
 }
