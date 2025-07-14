@@ -60,6 +60,11 @@ MainWindow::~MainWindow() {
         delete metaFinal;
         metaFinal = nullptr;
     }
+    if (tenshinhan) {
+        escena->removeItem(tenshinhan);
+        delete tenshinhan;
+        tenshinhan = nullptr;
+    }
     if (musicaFondo) {
         musicaFondo->stop();
         delete musicaFondo;
@@ -179,6 +184,16 @@ void MainWindow::iniciarNivel(int numero) {
         timerGeneradorEnemigos->start(QRandomGenerator::global()->bounded(2000, 4001));
 
         // Timer para verificar colisiones
+        if (!timerColisiones) {
+            timerColisiones = new QTimer(this);
+            connect(timerColisiones, &QTimer::timeout, this, &MainWindow::verificarColisiones);
+        }
+        timerColisiones->start(30);
+    } else if (numero == 2) {
+        tenshinhan = new Tenshinhan();
+        escena->addItem(tenshinhan);
+        tenshinhan->setZValue(1);
+
         if (!timerColisiones) {
             timerColisiones = new QTimer(this);
             connect(timerColisiones, &QTimer::timeout, this, &MainWindow::verificarColisiones);
@@ -338,10 +353,10 @@ void MainWindow::verificarColisiones()
             delete esf;
         }
         if (MetaFinal* meta = dynamic_cast<MetaFinal*>(item)) {
-            if (timer) timer->stop();
-            if (timerEnemigos) timerEnemigos->stop();
-            if (timerGeneradorEnemigos) timerGeneradorEnemigos->stop();
-            if (timerColisiones) timerColisiones->stop();
+                if (timer) timer->stop();
+                if (timerEnemigos) timerEnemigos->stop();
+                if (timerGeneradorEnemigos) timerGeneradorEnemigos->stop();
+                if (timerColisiones) timerColisiones->stop();
 
             DialogoRetro dialog(this);
             dialog.exec();
@@ -349,6 +364,10 @@ void MainWindow::verificarColisiones()
             emit nivelCompletado();
             close();
             return;
+        }
+        if (Tenshinhan* jefe = dynamic_cast<Tenshinhan*>(item)) {
+            QMessageBox::information(this, "Batalla", "\u00a1Tenshinhan aparece!");
+            // Aquí podría iniciar una batalla real
         }
     }
 }

@@ -1,10 +1,27 @@
 #ifndef TENSHINHAN_H
 #define TENSHINHAN_H
 
-class tenshinhan
+#include <QObject>
+#include <QGraphicsPixmapItem>
+#include "hud.h"
+
+class Tenshinhan : public QObject, public QGraphicsPixmapItem
 {
+    Q_OBJECT
 public:
-    tenshinhan();
+    explicit Tenshinhan(QObject *parent = nullptr);
+
+    int getVida() const { return vida; }
+
+signals:
+    void vidaActualizada(int nuevaVida);
+
+public slots:
+    void recibirDanio(int cantidad);
+
+private:
+    int vida;
+    HUD *hud;
 };
 
 #endif // TENSHINHAN_H

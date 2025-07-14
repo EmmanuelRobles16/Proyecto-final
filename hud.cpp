@@ -2,15 +2,15 @@
 #include <QBrush>
 #include <QPen>
 
-HUD::HUD(QGraphicsItem *parent)
-    : QObject(), QGraphicsRectItem(parent), anchoMax(200) {
+HUD::HUD(int ancho, const QColor &color, QGraphicsItem *parent)
+    : QObject(), QGraphicsRectItem(parent), anchoMax(ancho), colorBarra(color) {
     setRect(0, 0, anchoMax, 20);
-    setPen(QPen(Qt::white));
-    setBrush(Qt::NoBrush);
+        setPen(QPen(Qt::white));
+        setBrush(Qt::NoBrush);
 
-    barra = new QGraphicsRectItem(this);
-    barra->setRect(0, 0, anchoMax, 20);
-    barra->setBrush(Qt::green);
+        barra = new QGraphicsRectItem(this);
+        barra->setRect(0, 0, anchoMax, 20);
+        barra->setBrush(colorBarra);
     barra->setPen(Qt::NoPen);
 }
 

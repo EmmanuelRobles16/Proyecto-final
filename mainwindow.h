@@ -10,6 +10,7 @@
 #include "enemigovolador.h"
 #include "hud.h"
 #include "plataforma.h"
+#include "tenshinhan.h"
 #include "metafinal.h"
 #include "esferadragon.h"
 #include "dialogoretro.h"
@@ -52,6 +53,7 @@ private:
     QVector<EnemigoVolador*> enemigos;
     QVector<Plataforma*> Plataformas;
     MetaFinal *metaFinal = nullptr;
+    Tenshinhan *tenshinhan = nullptr;
     EsferaDragon *esfera = nullptr;
     QTimer *timerEnemigos = nullptr;
     QTimer *timerGeneradorEnemigos = nullptr;

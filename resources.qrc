@@ -11,6 +11,7 @@
     <file alias="enemigo_volador.png">sprites/enemigo_volador.png</file>
     <file alias="plataforma.png">sprites/plataforma.png</file>
     <file alias="esfera.png">sprites/esfera.png</file>  
+    <file alias="tenshinhan.png">sprites/tien.png</file>
     <file alias="krilin.png">sprites/krilin.png</file>
     <file alias="fondo_menu.png">sprites/fondo_menu.png</file>
       </qresource>
