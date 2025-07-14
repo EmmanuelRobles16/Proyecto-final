@@ -72,7 +72,7 @@ MainWindow::~MainWindow() {
 }
 void MainWindow::iniciarNivel(int numero) {
     nivelActual = numero;
-    carriles = {500, 350, 200, 50};
+    carriles = {530, 500, 450, 400};
     indiceCarril = 0;
     int anchoEscena = (numero == 1) ? 2400 : 800;
     escena = new QGraphicsScene(0, 0, anchoEscena, 600, this);
@@ -104,8 +104,9 @@ void MainWindow::iniciarNivel(int numero) {
         QGraphicsPixmapItem *fondoItem = escena->addPixmap(fondoBase.scaled(escena->width(), escena->height()));
         fondoItem->setZValue(-1);
         fondoItem->setPos(0, 0);
+        const int altoCarril = 100;
         for (int y : carriles) {
-            escena->addLine(0, y, escena->width(), y, QPen(Qt::white));
+            escena->addRect(0, y - altoCarril / 2, escena->width(), altoCarril, QPen(Qt::NoPen), QBrush(Qt::NoBrush));
         }
     }
     // Agregar a Goku en la escena
